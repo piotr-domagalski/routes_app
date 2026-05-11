@@ -1,4 +1,4 @@
-package com.example
+package com.example.routeserver
 
 import io.ktor.resources.*
 import io.ktor.server.application.*

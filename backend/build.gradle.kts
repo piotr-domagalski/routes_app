@@ -8,11 +8,12 @@ plugins {
     application
 }
 
-group = "com.example"
+group = "com.example.routeserver"
 version = "1.0.0-SNAPSHOT"
 
 application {
-    mainClass = "io.ktor.server.netty.EngineMain"
+    //mainClass = "io.ktor.server.netty.EngineMain"
+    mainClass = "com.example.routeserver.MainKt"
 }
 
 kotlin {
