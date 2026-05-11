@@ -1,4 +1,4 @@
-package com.example.routesapp
+package com.example.routesapp.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -22,33 +22,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.routesapp.data.RouteDto
+import com.example.routesapp.data.exampleRoutes
 import com.example.routesapp.ui.theme.RoutesAppTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 class RouteListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            RoutesAppTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                ) { innerPadding ->
-                    RouteList(
-                        exampleRoutes,
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .consumeWindowInsets(innerPadding)
-                    )
+                RoutesAppTheme {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                    ) { innerPadding ->
+                        RouteList(
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .consumeWindowInsets(innerPadding)
+                        )
 
+                    }
                 }
-            }
-        }
+
+       }
     }
 }
 
 @Composable
-fun RouteList(routes: List<Route>, modifier: Modifier = Modifier) {
+fun RouteList(viewModel: RoutesViewModel = viewModel(), modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    val routes by viewModel.routes.collectAsState()
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -76,12 +82,12 @@ fun RouteList(routes: List<Route>, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 fun RouteListPreview() {
     RoutesAppTheme {
-        RouteList(exampleRoutes)
+        RouteList(viewModel())
     }
 }
 
 @Composable
-fun RouteListItem(route: Route, modifier: Modifier = Modifier) {
+fun RouteListItem(route: RouteDto, modifier: Modifier = Modifier) {
     Text(
         text = route.name,
         style = MaterialTheme.typography.bodyLarge,

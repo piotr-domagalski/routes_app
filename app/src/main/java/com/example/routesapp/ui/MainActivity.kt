@@ -1,4 +1,4 @@
-package com.example.routesapp
+package com.example.routesapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

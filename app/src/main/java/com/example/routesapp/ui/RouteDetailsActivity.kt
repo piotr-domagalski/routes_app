@@ -1,4 +1,4 @@
-package com.example.routesapp
+package com.example.routesapp.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,23 +15,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.routesapp.data.RouteDto
+import com.example.routesapp.data.exampleRoutes
 import com.example.routesapp.ui.theme.RoutesAppTheme
 
 class RouteDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val routeId = this.intent.getIntExtra("route_id", -1)
-        val route: Route? = exampleRoutes.find({ route: Route -> route.id == routeId })
         enableEdgeToEdge()
         setContent {
             RoutesAppTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
+                    val routesViewModel: RoutesViewModel = viewModel()
+                    routesViewModel.getRouteById(routeId)
+                    val route = routesViewModel.route.collectAsState().value
                     if (route != null) {
                         RouteDetails(
                             route,
@@ -50,7 +56,7 @@ class RouteDetailsActivity : ComponentActivity() {
 }
 
 @Composable
-fun RouteDetails(route: Route, modifier: Modifier = Modifier) {
+fun RouteDetails(route: RouteDto, modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(16.dp)) {
         Row (
             horizontalArrangement = Arrangement.SpaceBetween,
