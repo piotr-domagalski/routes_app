@@ -10,6 +10,12 @@ plugins {
 group = "com.example.routeserver"
 version = "1.0.0-SNAPSHOT"
 
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "com.example.routeserver.MainKt"
+    }
+}
+
 application {
     //mainClass = "io.ktor.server.netty.EngineMain"
     mainClass = "com.example.routeserver.MainKt"
