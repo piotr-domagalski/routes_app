@@ -4,9 +4,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.resources.*
-import io.ktor.server.resources.*
-import io.ktor.server.resources.Resources
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,11 +19,12 @@ class Route(
     }
 }
 val exampleRoutes = listOf(
-    com.example.routeserver.Route(0, "Wartostrada Pętla", "pełna pętla", 15.67F),
-    com.example.routeserver.Route(1, "Wartostrada Asfalt", "odcinek przejeżdżalny asfaltem", 10.15F),
-    com.example.routeserver.Route(2, "Cytadela", "opis cytadeli", 5.2F),
-    com.example.routeserver.Route(3, "Kierskie", "pętla wokół jeziora kierskiego", 8.23F),
-    com.example.routeserver.Route(4, "Cytadela Sprint", "to jest test wyświetlania długości w metrach", 0.753F),
+    Route(0, "Wartostrada Pętla", "pełna pętla", 15.67F),
+    Route(1, "Wartostrada Asfalt", "odcinek przejeżdżalny asfaltem", 10.15F),
+    Route(2, "Cytadela", "opis cytadeli", 5.2F),
+    Route(3, "Kierskie", "pętla wokół jeziora kierskiego", 8.23F),
+    Route(4, "Cytadela Sprint", "to jest test wyświetlania długości w metrach", 0.753F),
+    Route(5, "Puszczykowo i spowrotem", "ktor wita", 42.69F),
 )
 
 fun Application.configureRouting() {
