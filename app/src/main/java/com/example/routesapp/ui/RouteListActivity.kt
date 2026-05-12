@@ -23,11 +23,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.routesapp.data.RouteDto
-import com.example.routesapp.data.exampleRoutes
 import com.example.routesapp.ui.theme.RoutesAppTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.example.routesapp.preview.SampleRoutes
+import com.example.shared.RouteSummary
 
 class RouteListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,7 +87,7 @@ fun RouteListPreview() {
 }
 
 @Composable
-fun RouteListItem(route: RouteDto, modifier: Modifier = Modifier) {
+fun RouteListItem(route: RouteSummary, modifier: Modifier = Modifier) {
     Text(
         text = route.name,
         style = MaterialTheme.typography.bodyLarge,
@@ -104,6 +104,6 @@ fun RouteListItem(route: RouteDto, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 fun RouteListItemPreview() {
     RoutesAppTheme {
-        RouteListItem(exampleRoutes[0])
+        RouteListItem(SampleRoutes.routeSummary)
     }
 }

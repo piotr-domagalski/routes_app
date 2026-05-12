@@ -37,6 +37,8 @@ dependencies {
     implementation(libs.mariadb)
     implementation(libs.hikari)
 
+    implementation(project(":shared"))
+
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
 }

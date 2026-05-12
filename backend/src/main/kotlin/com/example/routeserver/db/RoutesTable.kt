@@ -6,7 +6,7 @@ object RoutesTable : Table("routes") {
     val id = integer("id").autoIncrement()
     val name = varchar("name", 127)
     val description = varchar("description", 511)
-    val lengthM = integer("lengthM")
+    val distanceMeters = integer("distanceMeters")
 
     override val primaryKey = PrimaryKey(id)
 }

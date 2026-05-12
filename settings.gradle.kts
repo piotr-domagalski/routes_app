@@ -30,4 +30,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Routes App"
-include(":app", ":backend")
+include(":app")
+include(":backend")
+include(":shared")

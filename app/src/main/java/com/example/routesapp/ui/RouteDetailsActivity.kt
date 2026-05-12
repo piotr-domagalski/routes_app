@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.routesapp.data.RouteDto
-import com.example.routesapp.data.exampleRoutes
+import com.example.routesapp.preview.SampleRoutes
 import com.example.routesapp.ui.theme.RoutesAppTheme
+import com.example.shared.RouteDetails
 
 class RouteDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,7 @@ class RouteDetailsActivity : ComponentActivity() {
                     routesViewModel.getRouteById(routeId)
                     val route = routesViewModel.route.collectAsState().value
                     if (route != null) {
-                        RouteDetails(
+                        RouteDetailsScreen(
                             route,
                             modifier = Modifier
                                 .padding(innerPadding)
@@ -56,7 +56,7 @@ class RouteDetailsActivity : ComponentActivity() {
 }
 
 @Composable
-fun RouteDetails(route: RouteDto, modifier: Modifier = Modifier) {
+fun RouteDetailsScreen(route: RouteDetails, modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(16.dp)) {
         Row (
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -64,10 +64,10 @@ fun RouteDetails(route: RouteDto, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                route.name,
+                route.summary.name,
                 style = MaterialTheme.typography.headlineMedium
             )
-            Text("${route.lengthKM}km")
+            Text("${route.summary.distanceMeters/1000F}km")
         }
         Text(route.description)
     }
@@ -75,8 +75,8 @@ fun RouteDetails(route: RouteDto, modifier: Modifier = Modifier) {
 
 @Composable
 @Preview(showBackground = true)
-fun RouteDetailsPreview() {
+fun RouteDetailsScreenPreview() {
     RoutesAppTheme {
-        RouteDetails(exampleRoutes[0], Modifier.fillMaxSize())
+        RouteDetailsScreen(SampleRoutes.routeDetails, Modifier.fillMaxSize())
     }
 }

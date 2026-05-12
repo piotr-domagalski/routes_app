@@ -1,23 +1,21 @@
 package com.example.routesapp.ui
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.example.routesapp.data.RouteDto
 import com.example.routesapp.data.RoutesRepository
+import com.example.shared.RouteDetails
+import com.example.shared.RouteSummary
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class RoutesViewModel : ViewModel() {
     private val repo = RoutesRepository()
-    private val _routes = MutableStateFlow(emptyList<RouteDto>())
-    private val _route = MutableStateFlow<RouteDto?>(null)
+    private val _routeSummaries = MutableStateFlow(emptyList<RouteSummary>())
+    private val _routeDetails = MutableStateFlow<RouteDetails?>(null)
 
-    val routes = _routes.asStateFlow()
-    val route = _route.asStateFlow()
+    val routes = _routeSummaries.asStateFlow()
+    val route = _routeDetails.asStateFlow()
 
     init {
         loadRoutes()
@@ -25,13 +23,13 @@ class RoutesViewModel : ViewModel() {
 
     fun loadRoutes() {
         viewModelScope.launch {
-            _routes.value = repo.getRoutes()
+            _routeSummaries.value = repo.getRoutes()
         }
     }
 
     fun getRouteById(id: Int) {
         viewModelScope.launch {
-            _route.value = repo.getRoute(id)
+            _routeDetails.value = repo.getRoute(id)
         }
     }
 }

@@ -1,4 +1,4 @@
-INSERT INTO routes (id, name, description, lengthM) VALUES
+INSERT INTO routes (id, name, description, distanceMeters) VALUES
     (0, "Wartostrada Pętla", "pełna pętla", 15670),
     (1, "Wartostrada Asfalt", "odcinek przejeżdżalny asfaltem", 10150),
     (2, "Cytadela", "opis cytadeli", 5200),
