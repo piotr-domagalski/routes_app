@@ -32,6 +32,9 @@ dependencies {
     implementation(ktorLibs.server.netty)
     implementation(ktorLibs.server.resources)
     implementation(libs.logback.classic)
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.mariadb)
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

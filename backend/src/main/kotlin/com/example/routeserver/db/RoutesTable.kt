@@ -1,0 +1,12 @@
+package com.example.routeserver.db
+
+import org.jetbrains.exposed.v1.core.Table
+
+object RoutesTable : Table("routes") {
+    val id = integer("id").autoIncrement()
+    val name = varchar("name", 127)
+    val description = varchar("description", 511)
+    val lengthM = integer("lengthM")
+
+    override val primaryKey = PrimaryKey(id)
+}
