@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.mariadb)
+    implementation(libs.hikari)
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

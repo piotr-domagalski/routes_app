@@ -6,7 +6,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_URL: jdbc:mariadb://db:3306/${DB_NAME}
       DB_USER: ${DB_USER}
@@ -26,5 +27,11 @@ services:
       watch:
         - action: rebuild
           path: ./db/init
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
 volumes:
   db_data:
