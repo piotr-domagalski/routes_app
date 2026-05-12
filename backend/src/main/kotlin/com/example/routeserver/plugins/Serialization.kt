@@ -1,4 +1,4 @@
-package com.example.routeserver
+package com.example.routeserver.plugins
 
 import io.ktor.server.application.*
 import io.ktor.serialization.kotlinx.json.*

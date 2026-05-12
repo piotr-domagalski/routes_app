@@ -3,7 +3,7 @@ ktor:
     port: 8080
   application:
     modules:
-      - com.example.routeserver.DatabaseKt.configureDatabaseConnection
-      - com.example.routeserver.SerializationKt.configureSerialization
-      - com.example.routeserver.ResourcesKt.configureResources
-      - com.example.routeserver.RoutingKt.configureRouting
+      - com.example.routeserver.plugins.DatabaseKt.configureDatabaseConnection
+      - com.example.routeserver.plugins.SerializationKt.configureSerialization
+      - com.example.routeserver.plugins.ResourcesKt.configureResources
+      - com.example.routeserver.plugins.RoutingKt.configureRouting

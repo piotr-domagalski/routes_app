@@ -1,4 +1,4 @@
-package com.example.routeserver
+package com.example.routeserver.plugins
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource

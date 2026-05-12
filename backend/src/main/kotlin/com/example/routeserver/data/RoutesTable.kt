@@ -1,4 +1,4 @@
-package com.example.routeserver.db
+package com.example.routeserver.data
 
 import org.jetbrains.exposed.v1.core.Table
 
