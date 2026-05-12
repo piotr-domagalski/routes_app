@@ -2,20 +2,23 @@ package com.example.routesapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -31,11 +34,14 @@ import com.example.routesapp.ui.theme.RoutesAppTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import com.example.routesapp.data.fake.FakeRoutesRepository
 import com.example.routesapp.data.fake.SampleRoutes
 import com.example.shared.ActivityType
 import com.example.shared.RouteSummary
 import com.example.shared.RouteType
+import com.example.routesapp.R
 
 class RouteListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,21 +132,109 @@ fun RouteSummaryHeader(route: RouteSummary, modifier: Modifier = Modifier) {
                 //}
             )
         }
-        Text(
-            text = when (route.activityType) {
-                ActivityType.RUN -> "R "
-                ActivityType.BIKE -> " B"
-                ActivityType.BOTH -> "RB"
-            },
-            modifier = Modifier.padding(8.dp)
+        ActivityTypeIcon(route.activityType)
+        RouteTypeIcon(route.routeType)
+    }
+}
+
+@Composable
+fun RouteTypeIcon(type: RouteType) {
+    val colourOn = MaterialTheme.colorScheme.onSurfaceVariant
+    val colourOff = MaterialTheme.colorScheme.surfaceVariant
+    val imageModifier = Modifier.size(48.dp)
+    when (type) {
+        RouteType.LOOP -> {
+            Box {
+                Image(
+                    painter = painterResource(R.drawable.ic_oneway_grayout),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(colourOff),
+                    modifier = imageModifier
+                )
+                Image(
+                    painter = painterResource(R.drawable.ic_loop),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(colourOn),
+                    modifier = imageModifier
+                )
+            }
+        }
+        RouteType.ONEWAY -> {
+            Box {
+                Image(
+                    painter = painterResource(R.drawable.ic_loop_grayout),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(colourOff),
+                    modifier = imageModifier
+                )
+                Image(
+                    painter = painterResource(R.drawable.ic_oneway),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(colourOn),
+                    modifier = imageModifier
+                )
+            }
+        }
+    }
+}
+
+@Composable
+@Preview
+fun RouteTypeIconPreview() {
+    RoutesAppTheme {
+        Row {
+            RouteTypeIcon(RouteType.ONEWAY)
+            RouteTypeIcon(RouteType.LOOP)
+        }
+    }
+}
+
+@Composable
+fun ActivityTypeIcon(type: ActivityType, modifier: Modifier = Modifier) {
+    val bike_colour = when (type) {
+        ActivityType.RUN -> MaterialTheme.colorScheme.surfaceVariant
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    val shoe_colour = when (type) {
+        ActivityType.BIKE -> MaterialTheme.colorScheme.surfaceVariant
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_bike),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(bike_colour),
+            modifier = Modifier.size(32.dp)
         )
-        Text(
-            text = when (route.routeType) {
-                RouteType.LOOP -> "L"
-                RouteType.ONEWAY -> "O"
-            },
-            modifier = Modifier.padding(8.dp)
+        Image(
+            painter = painterResource(R.drawable.ic_shoe),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(shoe_colour),
+            modifier = Modifier.size(32.dp)
         )
+    }
+}
+
+@Composable
+@Preview(
+    name = "Light",
+    showBackground = true
+)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun ActivityTypeIconPreview() {
+    RoutesAppTheme {
+        Row {
+            ActivityTypeIcon(ActivityType.RUN)
+            ActivityTypeIcon(ActivityType.BIKE)
+            ActivityTypeIcon(ActivityType.BOTH)
+        }
     }
 }
 
