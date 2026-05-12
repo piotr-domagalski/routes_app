@@ -1,5 +1,7 @@
 package com.example.routeserver.data
 
+import com.example.shared.ActivityType
+import com.example.shared.RouteType
 import org.jetbrains.exposed.v1.core.Table
 
 object RoutesTable : Table("routes") {
@@ -7,6 +9,8 @@ object RoutesTable : Table("routes") {
     val name = varchar("name", 127)
     val description = varchar("description", 511)
     val distanceMeters = integer("distanceMeters")
+    val routeType = enumerationByName("type", 10, RouteType::class)
+    val activityType = enumerationByName("activity", 10, ActivityType::class)
 
     override val primaryKey = PrimaryKey(id)
 }

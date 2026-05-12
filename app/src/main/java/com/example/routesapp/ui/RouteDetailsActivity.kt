@@ -58,17 +58,7 @@ class RouteDetailsActivity : ComponentActivity() {
 @Composable
 fun RouteDetailsScreen(route: RouteDetails, modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(16.dp)) {
-        Row (
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                route.summary.name,
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Text("${route.summary.distanceMeters/1000F}km")
-        }
+        RouteSummaryHeader(route.summary)
         Text(route.description)
     }
 }

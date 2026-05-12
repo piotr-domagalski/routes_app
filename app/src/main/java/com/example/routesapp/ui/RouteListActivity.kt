@@ -8,7 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,9 +30,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.ui.theme.RoutesAppTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import com.example.routesapp.data.fake.FakeRoutesRepository
 import com.example.routesapp.data.fake.SampleRoutes
+import com.example.shared.ActivityType
 import com.example.shared.RouteSummary
+import com.example.shared.RouteType
 
 class RouteListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +69,7 @@ fun RouteList(viewModel: RoutesViewModel = viewModel(), modifier: Modifier = Mod
         contentPadding = PaddingValues(vertical = 8.dp)
     ) {
         items(routes) { route ->
-            RouteListItem(
+            RouteSummaryHeader(
                 route,
                 modifier = Modifier.clickable {
                     val intent = Intent(
@@ -94,23 +100,54 @@ fun RouteListPreview() {
 }
 
 @Composable
-fun RouteListItem(route: RouteSummary, modifier: Modifier = Modifier) {
-    Text(
-        text = route.name,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            //.clickable {
-            //    navController.navigate("details/$fruit")
-            //}
-    )
+fun RouteSummaryHeader(route: RouteSummary, modifier: Modifier = Modifier) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = route.name,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = modifier
+                    .padding(8.dp)
+                //.clickable {
+                //    navController.navigate("details/$fruit")
+                //}
+            )
+            Text(
+                text = "${route.distanceMeters / 1000F}km",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = modifier
+                    .padding(8.dp)
+                //.clickable {
+                //    navController.navigate("details/$fruit")
+                //}
+            )
+        }
+        Text(
+            text = when (route.activityType) {
+                ActivityType.RUN -> "R "
+                ActivityType.BIKE -> " B"
+                ActivityType.BOTH -> "RB"
+            },
+            modifier = Modifier.padding(8.dp)
+        )
+        Text(
+            text = when (route.routeType) {
+                RouteType.LOOP -> "L"
+                RouteType.ONEWAY -> "O"
+            },
+            modifier = Modifier.padding(8.dp)
+        )
+    }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun RouteListItemPreview() {
+fun RouteSummaryHeaderPreview() {
     RoutesAppTheme {
-        RouteListItem(SampleRoutes.routeSummary)
+        RouteSummaryHeader(SampleRoutes.routeSummary)
     }
 }

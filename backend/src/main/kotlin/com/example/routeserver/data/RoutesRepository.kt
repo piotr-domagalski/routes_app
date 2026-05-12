@@ -14,6 +14,8 @@ class RoutesRepository {
                     id = it[RoutesTable.id],
                     name = it[RoutesTable.name],
                     distanceMeters = it[RoutesTable.distanceMeters],
+                    routeType = it[RoutesTable.routeType],
+                    activityType = it[RoutesTable.activityType],
                 )
             }
         }
@@ -31,7 +33,9 @@ class RoutesRepository {
                             id = it[RoutesTable.id],
                             name = it[RoutesTable.name],
                             distanceMeters = it[RoutesTable.distanceMeters],
-                        ),
+                            routeType = it[RoutesTable.routeType],
+                            activityType = it[RoutesTable.activityType],
+                            ),
                         description = it[RoutesTable.description],
                     )
                 }

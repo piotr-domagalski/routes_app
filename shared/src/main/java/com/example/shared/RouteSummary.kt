@@ -6,5 +6,7 @@ import kotlinx.serialization.Serializable
 data class RouteSummary(
     val id: Int,
     val name: String,
-    val distanceMeters: Int
+    val distanceMeters: Int,
+    val routeType: RouteType,
+    val activityType: ActivityType
 )
