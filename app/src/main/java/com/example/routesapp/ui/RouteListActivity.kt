@@ -1,5 +1,6 @@
 package com.example.routesapp.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,7 +27,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.ui.theme.RoutesAppTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.routesapp.preview.SampleRoutes
+import com.example.routesapp.data.fake.FakeRoutesRepository
+import com.example.routesapp.data.fake.SampleRoutes
 import com.example.shared.RouteSummary
 
 class RouteListActivity : ComponentActivity() {
@@ -78,11 +80,16 @@ fun RouteList(viewModel: RoutesViewModel = viewModel(), modifier: Modifier = Mod
 
 }
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Composable
 @Preview(showBackground = true)
 fun RouteListPreview() {
+    val viewModel = RoutesViewModel(
+        repository = FakeRoutesRepository()
+    )
+
     RoutesAppTheme {
-        RouteList(viewModel())
+        RouteList(viewModel)
     }
 }
 

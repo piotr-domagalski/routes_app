@@ -9,8 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class RoutesViewModel : ViewModel() {
-    private val repo = RoutesRepository()
+class RoutesViewModel(
+    private val repository: RoutesRepository = RoutesRepository()
+) : ViewModel() {
     private val _routeSummaries = MutableStateFlow(emptyList<RouteSummary>())
     private val _routeDetails = MutableStateFlow<RouteDetails?>(null)
 
@@ -23,13 +24,13 @@ class RoutesViewModel : ViewModel() {
 
     fun loadRoutes() {
         viewModelScope.launch {
-            _routeSummaries.value = repo.getRoutes()
+            _routeSummaries.value = repository.getRoutes()
         }
     }
 
     fun getRouteById(id: Int) {
         viewModelScope.launch {
-            _routeDetails.value = repo.getRoute(id)
+            _routeDetails.value = repository.getRoute(id)
         }
     }
 }

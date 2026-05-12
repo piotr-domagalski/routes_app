@@ -3,7 +3,7 @@ package com.example.shared
 import kotlinx.serialization.Serializable
 
 @Serializable
-class RouteDetails (
+data class RouteDetails (
     val summary: RouteSummary,
     val description: String
 )

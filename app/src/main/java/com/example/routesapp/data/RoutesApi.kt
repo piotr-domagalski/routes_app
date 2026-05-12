@@ -13,5 +13,5 @@ interface RoutesApi {
     @GET("routes/{id}")
     suspend fun getRouteById(
         @Path("id") id: Int
-    ): RouteDetails
+    ): RouteDetails?
 }

@@ -3,7 +3,7 @@ package com.example.shared
 import kotlinx.serialization.Serializable
 
 @Serializable
-class RouteSummary(
+data class RouteSummary(
     val id: Int,
     val name: String,
     val distanceMeters: Int
