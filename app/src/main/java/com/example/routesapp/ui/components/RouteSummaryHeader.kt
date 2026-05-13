@@ -27,20 +27,11 @@ fun RouteSummaryHeader(route: RouteSummary, modifier: Modifier = Modifier) {
             Text(
                 text = route.name,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = modifier
-                    .padding(8.dp)
-                //.clickable {
-                //    navController.navigate("details/$fruit")
-                //}
+                modifier = Modifier.padding(8.dp)
             )
-            Text(
-                text = "${route.distanceMeters / 1000F}km",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = modifier
-                    .padding(8.dp)
-                //.clickable {
-                //    navController.navigate("details/$fruit")
-                //}
+            DistanceText(
+                route.distanceMeters,
+                modifier = Modifier.padding(8.dp)
             )
         }
         ActivityTypeIcon(route.activityType)

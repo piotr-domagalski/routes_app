@@ -5,7 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,13 +19,15 @@ import com.example.shared.ActivityType
 
 @Composable
 fun ActivityTypeIcon(type: ActivityType, modifier: Modifier = Modifier) {
-    val bike_colour = when (type) {
-        ActivityType.RUN -> MaterialTheme.colorScheme.surfaceVariant
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    val colourOn = LocalContentColor.current
+    val colourOff = LocalContentColor.current.copy(alpha = 0.25f)
+    val bikeColour = when (type) {
+        ActivityType.RUN -> colourOff
+        else -> colourOn
     }
-    val shoe_colour = when (type) {
-        ActivityType.BIKE -> MaterialTheme.colorScheme.surfaceVariant
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    val shoeColour = when (type) {
+        ActivityType.BIKE -> colourOff
+        else -> colourOn
     }
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -34,13 +36,13 @@ fun ActivityTypeIcon(type: ActivityType, modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(R.drawable.ic_bike),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(bike_colour),
+            colorFilter = ColorFilter.tint(bikeColour),
             modifier = Modifier.size(32.dp)
         )
         Image(
             painter = painterResource(R.drawable.ic_shoe),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(shoe_colour),
+            colorFilter = ColorFilter.tint(shoeColour),
             modifier = Modifier.size(32.dp)
         )
     }

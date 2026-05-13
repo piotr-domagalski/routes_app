@@ -24,7 +24,8 @@ class RouteListActivity : ComponentActivity() {
                     RouteListScreen(
                         modifier = Modifier
                             .padding(innerPadding)
-                            .consumeWindowInsets(innerPadding)
+                            .consumeWindowInsets(innerPadding),
+                        alternateRowColours = true
                     )
                 }
             }
