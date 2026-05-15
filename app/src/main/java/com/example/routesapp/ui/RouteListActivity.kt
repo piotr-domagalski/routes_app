@@ -37,7 +37,7 @@ class RouteListActivity : ComponentActivity() {
                             putExtra("route_id", route.id)
                         }
                             context.startActivity(intent)
-                        }
+                        },
                     )
                 }
             }

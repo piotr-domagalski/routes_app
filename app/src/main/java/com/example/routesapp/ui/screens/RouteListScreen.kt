@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,15 +31,18 @@ fun RouteListScreen(
     modifier: Modifier = Modifier,
     viewModel: RoutesViewModel = viewModel(),
     alternateRowColours: Boolean = false,
-    onClick: ((RouteSummary) -> Unit)? = null
+    onClick: ((RouteSummary) -> Unit)? = null,
+    highlightCallback: ((RouteSummary) -> Color?)? = null
 ) {
-    val routes by viewModel.routes.collectAsState()
+    val routes = viewModel.routes.collectAsState().value
+    val selectedRoute = viewModel.route.collectAsState().value
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(vertical = 8.dp)
     ) {
         itemsIndexed(routes) { index, route ->
-            val bg = if (!alternateRowColours) { MaterialTheme.colorScheme.surface }
+            val bg = highlightCallback?.invoke(route)?:
+                if (!alternateRowColours) { MaterialTheme.colorScheme.surface }
                 else if (index % 2 == 0) { MaterialTheme.colorScheme.surfaceContainer }
                 else { MaterialTheme.colorScheme.surfaceContainerLow }
             Surface (

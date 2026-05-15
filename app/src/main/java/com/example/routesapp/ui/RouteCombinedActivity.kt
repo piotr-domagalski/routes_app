@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -87,6 +88,9 @@ class RouteCombinedActivity : ComponentActivity() {
         Row(
             modifier = modifier
         ) {
+            val selectedRoute = routesViewModel.route.collectAsState().value
+            val selectedHighlightColour = MaterialTheme.colorScheme.tertiary
+
             RouteListScreen(
                 modifier = Modifier.width(combinedListWidthDp),
                 alternateRowColours = true,
@@ -96,6 +100,11 @@ class RouteCombinedActivity : ComponentActivity() {
                     } else {
                         routesViewModel.getRouteById(route.id)
                     }
+                },
+                highlightCallback = { route ->
+                    if (selectedRoute != null && selectedRoute.summary.id == route.id) {
+                        selectedHighlightColour
+                    } else { null }
                 }
             )
             val route = routesViewModel.route.collectAsState().value
