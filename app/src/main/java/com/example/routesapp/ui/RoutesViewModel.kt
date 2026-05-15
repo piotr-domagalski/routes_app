@@ -14,9 +14,11 @@ class RoutesViewModel(
 ) : ViewModel() {
     private val _routeSummaries = MutableStateFlow(emptyList<RouteSummary>())
     private val _routeDetails = MutableStateFlow<RouteDetails?>(null)
+    private val _routeLookupError = MutableStateFlow<Boolean>(false)
 
     val routes = _routeSummaries.asStateFlow()
     val route = _routeDetails.asStateFlow()
+    val routeLookupError = _routeLookupError.asStateFlow()
 
     init {
         loadRoutes()
@@ -31,12 +33,14 @@ class RoutesViewModel(
     fun getRouteById(id: Int) {
         viewModelScope.launch {
             _routeDetails.value = repository.getRoute(id)
+            _routeLookupError.value = (_routeDetails.value == null)
         }
     }
 
     fun forgetRoute() {
         viewModelScope.launch {
             _routeDetails.value = null
+            _routeLookupError.value = false
         }
     }
 }

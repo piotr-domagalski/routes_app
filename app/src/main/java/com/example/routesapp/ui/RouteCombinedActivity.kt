@@ -99,7 +99,7 @@ class RouteCombinedActivity : ComponentActivity() {
                 }
             )
             val route = routesViewModel.route.collectAsState().value
-            RouteDetailsScreen(route)
+            RouteDetailsScreen()
         }
     }
 }

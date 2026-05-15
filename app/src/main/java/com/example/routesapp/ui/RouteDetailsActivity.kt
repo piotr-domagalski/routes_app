@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.ui.screens.RouteDetailsScreen
@@ -27,7 +26,6 @@ class RouteDetailsActivity : ComponentActivity() {
                     val routesViewModel: RoutesViewModel = viewModel()
                     routesViewModel.getRouteById(routeId)
                     RouteDetailsScreen(
-                        routesViewModel.route.collectAsState().value,
                         modifier = Modifier
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding)
