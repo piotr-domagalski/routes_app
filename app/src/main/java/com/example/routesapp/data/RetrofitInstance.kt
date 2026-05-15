@@ -8,6 +8,7 @@ import okhttp3.MediaType.Companion.toMediaType
 object RetrofitInstance {
 
     private const val BASE_URL = "http://192.168.1.2:8080/"
+    //private const val BASE_URL = "http://routes.domagalski.it/"
 
     private val json = Json {
         ignoreUnknownKeys = true

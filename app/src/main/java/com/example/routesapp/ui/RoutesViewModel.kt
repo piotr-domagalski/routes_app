@@ -33,4 +33,10 @@ class RoutesViewModel(
             _routeDetails.value = repository.getRoute(id)
         }
     }
+
+    fun forgetRoute() {
+        viewModelScope.launch {
+            _routeDetails.value = null
+        }
+    }
 }

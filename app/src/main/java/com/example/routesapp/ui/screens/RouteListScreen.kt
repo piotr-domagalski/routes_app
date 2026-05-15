@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -22,16 +23,18 @@ import com.example.routesapp.ui.RouteDetailsActivity
 import com.example.routesapp.ui.RoutesViewModel
 import com.example.routesapp.ui.theme.RoutesAppTheme
 import com.example.routesapp.ui.components.RouteSummaryHeader
+import com.example.shared.RouteSummary
+
 @Composable
 fun RouteListScreen(
     modifier: Modifier = Modifier,
     viewModel: RoutesViewModel = viewModel(),
-    alternateRowColours: Boolean = false
+    alternateRowColours: Boolean = false,
+    onClick: ((RouteSummary) -> Unit)? = null
 ) {
-    val context = LocalContext.current
     val routes by viewModel.routes.collectAsState()
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         contentPadding = PaddingValues(vertical = 8.dp)
     ) {
         itemsIndexed(routes) { index, route ->
@@ -44,13 +47,7 @@ fun RouteListScreen(
                 RouteSummaryHeader(
                     route,
                     modifier = Modifier.clickable {
-                        val intent = Intent(
-                            context,
-                            RouteDetailsActivity::class.java
-                        ).apply {
-                            putExtra("route_id", route.id)
-                        }
-                        context.startActivity(intent)
+                        onClick?.invoke(route)
                     }
                 )
             }
