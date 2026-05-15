@@ -32,7 +32,10 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier, viewModel: RoutesViewModel
         if (route != null) {
             Column(modifier = modifier.padding(16.dp)) {
                 RouteSummaryHeader(route.summary)
-                Text(route.description)
+                Text(route.description,
+                    modifier = Modifier.weight(1f)
+                )
+                StopwatchScreen()
             }
         } else {
             Text("Wybierz trasę by zobaczyć szczegóły",
