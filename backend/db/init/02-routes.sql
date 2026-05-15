@@ -1,8 +1,16 @@
-INSERT INTO routes (id, name, description, distanceMeters, type, activity) VALUES
-    (0, "Wartostrada Pętla", "pełna pętla", 15670, "LOOP", "BOTH"),
-    (1, "Wartostrada Asfalt", "odcinek przejeżdżalny asfaltem", 10150, "ONEWAY", "BOTH"),
-    (2, "Cytadela", "opis cytadeli", 5200, "LOOP", "BOTH"),
-    (3, "Kierskie", "pętla wokół jeziora kierskiego", 8230, "LOOP", "BOTH"),
-    (4, "Cytadela Sprint", "to jest test wyświetlania długości w metrach", 753, "ONEWAY", "RUN"),
-    (5, "Puszczykowo i spowrotem", "ktor wita", 42690, "LOOP", "BOTH"),
-    (6, "Poznań - Piła", "chce ci się? fr?", 120000, "ONEWAY", "BIKE");
+INSERT INTO routes (name, description, distanceMeters, type, activity) VALUES
+    ("Wartostrada Pętla", "pełna pętla", 15670, "LOOP", "BOTH"),
+    ("Wartostrada Asfalt", "odcinek przejeżdżalny asfaltem", 10150, "ONEWAY", "BOTH"),
+    ("Cytadela", "opis cytadeli", 5200, "LOOP", "BOTH"),
+    ("Kierskie", "pętla wokół jeziora kierskiego", 8230, "LOOP", "BOTH"),
+    ("Cytadela Sprint", "to jest test wyświetlania długości w metrach", 753, "ONEWAY", "RUN"),
+    ("Puszczykowo i z powrotem", "ktor wita", 42690, "LOOP", "BOTH"),
+    ("Poznań - Piła", "chce ci się? fr?", 120000, "ONEWAY", "BIKE"),
+    ("Las w wiosce", "idk dodaję żeby lista musiała się scrollować", 13370, "LOOP", "BIKE"),
+    ("Trasa z długim opisem", "To jest trasa z bardzo długim opisem. Jest długi ponieważ trasa ta jest bardzo ciekawa i wymaga długiego opisu by w pełni oddać jej ciekawość. Gdyby opis był krótki to nie opisywałby odpowiednio szczegółowo tej trasy, dlatego jest długi.", 69420, "LOOP", "RUN"),
+    ("Kolejna trasa", "kończą mi się śmieszne liczby :'(", 28008, "LOOP", "BIKE"),
+    ("A co gdyby", "dwucyfrowy dystans", 67, "LOOP", "BIKE"),
+    ("Spacer do biedry", "po dwunastopak żubra", 278, "ONEWAY", "RUN"),
+    ("Spacer do kerfa", "po prawdziwe piwo, i powrót bo nie jestem alkoholikiem i mogę dojść do domu o własnych siłach", 1476, "LOOP", "RUN"),
+    ("Do lodówki", "otworzyć kolejnego żubra", 3, "ONEWAY", "RUN"),
+    ("Na Księżyc", "endurance run world record", 384400000, "ONEWAY", "RUN");

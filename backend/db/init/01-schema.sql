@@ -1,5 +1,5 @@
 CREATE TABLE routes (
-    id INT PRIMARY KEY,
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(127) NULL,
     description VARCHAR(511) NULL,
     distanceMeters INT NULL,
