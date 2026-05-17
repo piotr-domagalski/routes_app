@@ -19,6 +19,7 @@ lifecycleRuntimeCompose="2.10.0"
 exposed = "1.2.0"
 mariadb = "3.5.8"
 hikari = "4.0.3"
+springCrypto = "7.0.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +48,11 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
+spring-crypto = { group = "org.springframework.security", name = "spring-security-crypto", version.ref = "springCrypto"}
+spring-jcl = { group = "org.springframework", name = "spring-jcl", version = "6.2.18" }
+bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version = "1.84" }
+
 mariadb = { group = "org.mariadb.jdbc", name="mariadb-java-client", version.ref = "mariadb" }
 hikari = { group = "com.zaxxer", name= "HikariCP", version.ref = "hikari" }
 

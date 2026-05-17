@@ -34,9 +34,12 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.datetime)
     implementation(libs.mariadb)
     implementation(libs.hikari)
-
+    implementation(libs.spring.crypto)
+    implementation(libs.spring.jcl)
+    implementation(libs.bouncycastle)
     implementation(project(":shared"))
 
     testImplementation(kotlin("test"))
