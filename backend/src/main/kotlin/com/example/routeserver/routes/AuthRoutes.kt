@@ -31,10 +31,9 @@ fun Route.authRoutes(
         print("login req: $req")
         val session = authService.login(req)
         if (session == null) {
-            return@post call.respond(HttpStatusCode.Unauthorized)
+            call.respond(HttpStatusCode.OK, LoginResponse(null))
         } else {
-
-            call.respond(LoginResponse(Base64.encode(session.token)))
+            call.respond(HttpStatusCode.Created, LoginResponse(Base64.encode(session.token)))
         }
     }
 

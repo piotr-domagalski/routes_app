@@ -29,7 +29,7 @@ import com.example.shared.RouteSummary
 @Composable
 fun RouteListScreen(
     modifier: Modifier = Modifier,
-    viewModel: RoutesViewModel = viewModel(),
+    viewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory),
     alternateRowColours: Boolean = false,
     onClick: ((RouteSummary) -> Unit)? = null,
     highlightCallback: ((RouteSummary) -> Color?)? = null

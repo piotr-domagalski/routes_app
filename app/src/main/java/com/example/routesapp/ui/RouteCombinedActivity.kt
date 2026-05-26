@@ -21,10 +21,11 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.routesapp.RoutesApp
 import com.example.routesapp.ui.screens.RouteDetailsScreen
 import com.example.routesapp.ui.screens.RouteListScreen
 import com.example.routesapp.ui.theme.RoutesAppTheme
-
+import com.example.routesapp.data.SessionState
 
 class RouteCombinedActivity : ComponentActivity() {
     val combinedListWidthDp = 320.dp
@@ -32,6 +33,16 @@ class RouteCombinedActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val app = application as RoutesApp
+        val sessionState = app.appContainer.sessionManager.state.value
+        if (sessionState !is SessionState.LoggedIn
+            ) {
+            startActivity(
+                Intent(this, LoginActivity::class.java)
+            )
+        }
+
         setContent {
             RoutesAppTheme {
                 Scaffold(
@@ -84,7 +95,7 @@ class RouteCombinedActivity : ComponentActivity() {
 
     @Composable
     fun RouteListAndDetails(modifier: Modifier = Modifier) {
-        val routesViewModel: RoutesViewModel = viewModel()
+        val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
         Row(
             modifier = modifier
         ) {
