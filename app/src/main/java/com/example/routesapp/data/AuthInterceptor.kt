@@ -1,5 +1,6 @@
 package com.example.routesapp.data
 
+import kotlinx.coroutines.CoroutineScope
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -26,6 +27,12 @@ class AuthInterceptor(
             }
             .build()
 
-        return chain.proceed(request)
+        val response = chain.proceed(request)
+
+        if (response.code == 401) {
+            sessionManager.clearToken()
+        }
+
+        return response
     }
 }

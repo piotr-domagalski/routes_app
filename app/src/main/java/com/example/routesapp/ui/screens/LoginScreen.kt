@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.ui.AuthViewModel
 import androidx.compose.runtime.collectAsState
+import com.example.routesapp.RoutesApp
+import com.example.routesapp.data.SessionState
 
 @Preview(showBackground = true)
 @Composable
@@ -56,19 +58,21 @@ fun LoginScreen(onSuccess: () -> Unit,
             }
             Button({ viewModel.attemptLogin() }) { Text("Log in") }
         }
-        if (viewModel.loginFailed.collectAsState().value) {
-            Text("Błędny login lub hasło",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error)
-        } else {
-            val token = viewModel.token.collectAsState().value
-            if (token != null) {
+        when (viewModel.loginSuccessful.collectAsState().value) {
+            false -> {
+                Text("Błędny login lub hasło",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error)
+            }
+            true -> {
+                val token = (viewModel.sessionState.collectAsState().value as? SessionState.LoggedIn)?.token
                 Text("Zalogowano pomyślnie. Token: $token",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
                 onSuccess()
             }
+            null -> { }
         }
     }
 }

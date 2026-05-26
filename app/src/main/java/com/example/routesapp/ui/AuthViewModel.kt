@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.routesapp.RoutesApp
 import com.example.routesapp.data.AuthRepository
 import com.example.routesapp.data.RoutesRepository
+import com.example.routesapp.data.SessionManager
 import com.example.shared.LoginRequest
 import com.example.shared.RouteSummary
 import kotlinx.coroutines.delay
@@ -30,16 +31,16 @@ import kotlin.time.TimeSource
 
 class AuthViewModel(
     private val repository: AuthRepository,
+    private val sessionManager: SessionManager
 ): ViewModel() {
     val usernameFieldState: TextFieldState = TextFieldState()
     val passwordFieldState: TextFieldState = TextFieldState()
     private val _rememberMe: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val _token: MutableStateFlow<String?> = MutableStateFlow<String?>(null)
-    private val _loginFailed: MutableStateFlow<Boolean> = MutableStateFlow<Boolean>(false)
+    private val _loginSuccessful: MutableStateFlow<Boolean?> = MutableStateFlow<Boolean?>(null)
 
+    val sessionState = sessionManager.state
     val rememberMe = _rememberMe.asStateFlow()
-    val token = _token.asStateFlow()
-    val loginFailed = _loginFailed.asStateFlow()
+    val loginSuccessful = _loginSuccessful.asStateFlow()
 
     fun setRememberMe(value: Boolean) {
         _rememberMe.value = value
@@ -47,24 +48,19 @@ class AuthViewModel(
 
     fun attemptLogin() {
         viewModelScope.launch {
-            val response = repository.login(
-                LoginRequest(
-                    usernameFieldState.text.toString(),
-                    passwordFieldState.text.toString()
+            _loginSuccessful.value = repository.login(
+                    LoginRequest(
+                        usernameFieldState.text.toString(),
+                        passwordFieldState.text.toString()
+                    )
                 )
-            )
-            _token.value = response.token
-            _loginFailed.value = response.token == null
         }
     }
 
     fun logout() {
-        if (_token.value != null) {
-            viewModelScope.launch {
-                repository.logout()
-            }
-            _token.value = null
-            _loginFailed.value = false
+        viewModelScope.launch {
+            repository.logout()
+            _loginSuccessful.value = null
         }
     }
 
@@ -72,7 +68,8 @@ class AuthViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 AuthViewModel(
-                    (this[APPLICATION_KEY] as RoutesApp).appContainer.authRepository
+                    (this[APPLICATION_KEY] as RoutesApp).appContainer.authRepository,
+                    (this[APPLICATION_KEY] as RoutesApp).appContainer.sessionManager
                 )
             }
         }

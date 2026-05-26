@@ -10,7 +10,12 @@ import com.example.routesapp.data.AuthStore
 import com.example.routesapp.data.RoutesApi
 import com.example.routesapp.data.RoutesRepository
 import com.example.routesapp.data.SessionManager
+import com.example.routesapp.data.WorkoutsApi
+import com.example.routesapp.data.WorkoutsRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -28,11 +33,11 @@ class RoutesApp: Application() {
     }
 
     class AppContainer(context: Context) {
-
+        val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
         private val authStore = AuthStore(context.authStore)
 
         val sessionManager =
-            SessionManager(authStore)
+            SessionManager(authStore, applicationScope)
 
         private val BASE_URL = "http://192.168.1.2:8080/"
         //private const val BASE_URL = "http://routes.domagalski.it/"
@@ -54,9 +59,12 @@ class RoutesApp: Application() {
             .build()
 
         val routesApi: RoutesApi = retrofit.create(RoutesApi::class.java)
-        val authApi: AuthApi = retrofit.create(AuthApi::class.java)
-
         val routesRepository: RoutesRepository = RoutesRepository(routesApi)
-        val authRepository: AuthRepository = AuthRepository(authApi)
+
+        val authApi: AuthApi = retrofit.create(AuthApi::class.java)
+        val authRepository: AuthRepository = AuthRepository(authApi, sessionManager)
+
+        val workoutsApi: WorkoutsApi = retrofit.create(WorkoutsApi::class.java)
+        val workoutsRepository: WorkoutsRepository = WorkoutsRepository(workoutsApi)
     }
 }

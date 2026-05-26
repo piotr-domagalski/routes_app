@@ -21,7 +21,7 @@ class AuthStore(
         }
     }
 
-    suspend fun clear() {
+    suspend fun clearToken() {
         dataStore.edit {
             it.remove(AUTH_TOKEN)
         }
