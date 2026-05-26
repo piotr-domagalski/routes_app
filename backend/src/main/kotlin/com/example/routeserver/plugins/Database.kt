@@ -4,7 +4,10 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.Application
 import org.jetbrains.exposed.v1.core.DatabaseConfig
+import org.jetbrains.exposed.v1.core.StdOutSqlLogger
 import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 fun Application.configureDatabaseConnection() {
     val dbUrl = System.getenv("DB_URL")
@@ -28,4 +31,10 @@ fun Application.configureDatabaseConnection() {
         datasource = dataSource,
         databaseConfig = DatabaseConfig { }
     )
+    println("connected to db: $mariadb")
+    TransactionManager.defaultDatabase?.let {
+        transaction(it) {
+            addLogger(StdOutSqlLogger)
+        }
+    }
 }

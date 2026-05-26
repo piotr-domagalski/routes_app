@@ -21,3 +21,18 @@ CREATE TABLE sessions (
         FOREIGN KEY (user) REFERENCES users(username)
         ON DELETE CASCADE
 );
+
+CREATE TABLE workouts (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user VARCHAR(32) NOT NULL,
+    route INT NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    duration TIME NOT NULL,
+    private BOOLEAN NOT NULL,
+    CONSTRAINT `fk_workouts_users`
+        FOREIGN KEY (user) REFERENCES users(username)
+        ON DELETE CASCADE,
+    CONSTRAINT `fk_workouts_routes`
+        FOREIGN KEY (route) REFERENCES routes(id)
+        ON DELETE CASCADE
+);
