@@ -10,6 +10,7 @@ import com.example.routesapp.data.AuthStore
 import com.example.routesapp.data.RoutesApi
 import com.example.routesapp.data.RoutesRepository
 import com.example.routesapp.data.SessionManager
+import com.example.routesapp.data.StopwatchRepository
 import com.example.routesapp.data.WorkoutsApi
 import com.example.routesapp.data.WorkoutsRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -66,5 +67,7 @@ class RoutesApp: Application() {
 
         val workoutsApi: WorkoutsApi = retrofit.create(WorkoutsApi::class.java)
         val workoutsRepository: WorkoutsRepository = WorkoutsRepository(workoutsApi)
+
+        val stopwatchRepository: StopwatchRepository = StopwatchRepository()
     }
 }

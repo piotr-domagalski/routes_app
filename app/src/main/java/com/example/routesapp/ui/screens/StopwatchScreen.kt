@@ -28,7 +28,7 @@ import com.example.routesapp.ui.theme.RoutesAppTheme
 
 @Composable
 fun StopwatchScreen(modifier: Modifier = Modifier) {
-    val stopwatchViewModel: StopwatchViewModel = viewModel()
+    val stopwatchViewModel: StopwatchViewModel = viewModel(factory = StopwatchViewModel.Factory)
     Column(modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
