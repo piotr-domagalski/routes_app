@@ -34,6 +34,8 @@ fun Route.workoutRoutes(
             call.respond(HttpStatusCode.ServiceUnavailable)
         }
         get {
+            println("GET /workouts")
+
             val token = call.request.authorization() ?:
             return@get call.respond(HttpStatusCode.Unauthorized)
             val session = authService.validateToken(token.toByteArray()) ?:
@@ -51,8 +53,8 @@ fun Route.workoutRoutes(
             }
 
             val sort = when (sortString) {
-                "recent" -> WorkoutsQuerySortOrder.RECENT
-                "fastest" -> WorkoutsQuerySortOrder.FASTEST
+                WorkoutsQuerySortOrder.RECENT.toString() -> WorkoutsQuerySortOrder.RECENT
+                WorkoutsQuerySortOrder.FASTEST.toString() -> WorkoutsQuerySortOrder.FASTEST
                 null -> WorkoutsQuery.DEFAULT_SORT
                 else -> return@get call.respond(HttpStatusCode.BadRequest, "invalid sort")
             }
@@ -73,6 +75,8 @@ fun Route.workoutRoutes(
                 count = count ?: WorkoutsQuery.DEFAULT_COUNT,
                 offset = offset ?: WorkoutsQuery.DEFAULT_OFFSET,
             )
+
+            println("\tquery: $query")
 
             call.respond(workoutsRepository.getWorkouts(query, session))
         }
