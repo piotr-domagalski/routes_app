@@ -31,14 +31,13 @@ import kotlin.time.TimeSource
 
 class AuthViewModel(
     private val repository: AuthRepository,
-    private val sessionManager: SessionManager
 ): ViewModel() {
     val usernameFieldState: TextFieldState = TextFieldState()
     val passwordFieldState: TextFieldState = TextFieldState()
     private val _rememberMe: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val _loginSuccessful: MutableStateFlow<Boolean?> = MutableStateFlow<Boolean?>(null)
 
-    val sessionState = sessionManager.state
+    val sessionState = repository.sessionState
     val rememberMe = _rememberMe.asStateFlow()
     val loginSuccessful = _loginSuccessful.asStateFlow()
 
@@ -69,7 +68,6 @@ class AuthViewModel(
             initializer {
                 AuthViewModel(
                     (this[APPLICATION_KEY] as RoutesApp).appContainer.authRepository,
-                    (this[APPLICATION_KEY] as RoutesApp).appContainer.sessionManager
                 )
             }
         }

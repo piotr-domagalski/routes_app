@@ -13,19 +13,23 @@ class AuthStore(
 ) {
     companion object {
         val AUTH_TOKEN = stringPreferencesKey("auth_token")
-    }
-
-    suspend fun saveToken(token: String) {
-        dataStore.edit {
-            it[AUTH_TOKEN] = token
-        }
-    }
-
-    suspend fun clearToken() {
-        dataStore.edit {
-            it.remove(AUTH_TOKEN)
-        }
+        val AUTH_USER = stringPreferencesKey("auth_user")
     }
 
     val tokenFlow: Flow<String?> = dataStore.data.map { it[AUTH_TOKEN] }
+    val userFlow: Flow<String?> = dataStore.data.map { it[AUTH_USER] }
+
+    suspend fun save(token: String, user: String) {
+        dataStore.edit {
+            it[AUTH_TOKEN] = token
+            it[AUTH_USER] = user
+        }
+    }
+
+    suspend fun clear() {
+        dataStore.edit {
+            it.remove(AUTH_TOKEN)
+            it.remove(AUTH_USER)
+        }
+    }
 }

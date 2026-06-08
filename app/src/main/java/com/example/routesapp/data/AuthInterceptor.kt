@@ -30,7 +30,7 @@ class AuthInterceptor(
         val response = chain.proceed(request)
 
         if (response.code == 401) {
-            sessionManager.clearToken()
+            sessionManager.clearState()
         }
 
         return response
