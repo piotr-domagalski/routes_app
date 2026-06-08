@@ -5,11 +5,10 @@ import com.example.routesapp.data.RoutesRepository
 import com.example.shared.RouteDetails
 import com.example.shared.RouteSummary
 
-
 class FakeRoutesRepository() : RoutesRepository(FakeRoutesApi()) {
-    override suspend fun getRoutes() = SampleRoutes.routes.map { route -> route.summary }
+    suspend fun getRoutes() = SampleRoutes.routes.map { route -> route.summary }
 
-    override suspend fun getRoute(id: Int) =
+    suspend fun getRoute(id: Int) =
         SampleRoutes.routes.find { route -> route.summary.id == id }
 
     class FakeRoutesApi: RoutesApi {

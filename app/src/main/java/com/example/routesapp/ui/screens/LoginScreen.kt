@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.ui.AuthViewModel
 import androidx.compose.runtime.collectAsState
-import com.example.routesapp.RoutesApp
 import com.example.routesapp.data.SessionState
 
 @Preview(showBackground = true)

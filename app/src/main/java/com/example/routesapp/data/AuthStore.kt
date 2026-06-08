@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-
 class AuthStore(
     private val dataStore: DataStore<Preferences>
 ) {

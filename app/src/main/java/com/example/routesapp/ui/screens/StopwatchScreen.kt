@@ -46,7 +46,7 @@ fun StopwatchScreen(modifier: Modifier = Modifier) {
         Row(modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Button(onClick = {},
+            Button(onClick = {stopwatchViewModel.upload()},
                 modifier = buttonModifier,
                 contentPadding = buttonContentPadding,
             ) {

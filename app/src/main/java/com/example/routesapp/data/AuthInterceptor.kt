@@ -1,6 +1,5 @@
 package com.example.routesapp.data
 
-import kotlinx.coroutines.CoroutineScope
 import okhttp3.Interceptor
 import okhttp3.Response
 

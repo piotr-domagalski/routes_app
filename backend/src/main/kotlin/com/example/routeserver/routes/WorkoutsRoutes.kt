@@ -22,13 +22,14 @@ fun Route.workoutRoutes(
         post("/upload") {
             val workout = call.receive<WorkoutSummary>()
             val token = call.request.authorization() ?:
-                return@post call.respond(HttpStatusCode.Unauthorized)
+                return@post call.respond(HttpStatusCode.Unauthorized, "missing auth token")
             val session = authService.validateToken(token.toByteArray()) ?:
-                return@post call.respond(HttpStatusCode.Unauthorized)
+                return@post call.respond(HttpStatusCode.Unauthorized, "invalid auth token")
             if (workout.user != session.user) {
-                return@post call.respond(HttpStatusCode.Unauthorized)
+                return@post call.respond(HttpStatusCode.Unauthorized, "cannot upload as another user")
             }
             workoutsRepository.insertWorkout(workout)
+            call.respond(HttpStatusCode.Created)
         }
         post("/remove") {
             call.respond(HttpStatusCode.ServiceUnavailable)
