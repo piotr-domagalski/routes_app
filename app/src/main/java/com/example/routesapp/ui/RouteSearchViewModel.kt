@@ -25,6 +25,10 @@ class RouteSearchViewModel(
     val distanceMin = 0
     val distanceMax = 0
 
+    init {
+        routeType.value = repository.query.value.routeType
+        activityType.value = repository.query.value.activityType
+    }
     fun setSearchString(new: String?) {
         if (new.isNullOrBlank()) {
             _searchString.value = null
