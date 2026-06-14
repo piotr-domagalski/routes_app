@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.routesapp.RoutesApp
 import com.example.routesapp.data.RoutesRepository
+import com.example.shared.RoutesQuery
 import kotlinx.coroutines.launch
 
 class RoutesViewModel(
@@ -22,6 +23,10 @@ class RoutesViewModel(
         if (repository.routes.value.isEmpty()) {
             loadRoutes()
         }
+    }
+
+    fun setQuery(query: RoutesQuery) {
+        repository.query.value = query
     }
 
     fun loadRoutes() {

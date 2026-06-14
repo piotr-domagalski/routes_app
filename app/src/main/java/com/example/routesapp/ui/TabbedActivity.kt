@@ -119,13 +119,8 @@ class TabbedActivity : ComponentActivity() {
         val scope = rememberCoroutineScope()
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         ModalNavigationDrawer(drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet() {
-                    Text("One")
-                    Text("Two")
-                    Text("Three")
-                }
-            }) {
+            drawerContent = { NavDrawerContent(drawerState, pagerState) }
+        ) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = { TopAppBar(
@@ -187,6 +182,79 @@ class TabbedActivity : ComponentActivity() {
                 }
             }
 
+        }
+    }
+
+
+    @Composable
+    fun NavDrawerContent(drawerState: DrawerState, pagerState: PagerState) {
+        val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory)
+        val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
+        val scope = rememberCoroutineScope()
+        val routeShortcutOnClickFactory = { query: RoutesQuery ->
+            routesViewModel.setQuery(query)
+            routesViewModel.loadRoutes()
+            scope.launch { drawerState.close() }
+            scope.launch { pagerState.animateScrollToPage(1) }
+        }
+        ModalDrawerSheet(modifier = Modifier.width(200.dp)) {
+            val user = (authViewModel.sessionState.collectAsState().value as? SessionState.LoggedIn)?.user
+            NavDrawerHeading(if (user != null) { "Elo elo, $user!" } else { "Wylogowano" })
+
+            HorizontalDivider(modifier = Modifier.width(180.dp).align(Alignment.CenterHorizontally))
+
+            NavDrawerHeading("Trasy")
+
+            NavDrawerItem(Icons.Outlined.PedalBike, "Rowerowe",
+                onClick = { routeShortcutOnClickFactory(RoutesQuery(activityType = ActivityType.BIKE)) }
+            )
+            NavDrawerItem(Icons.AutoMirrored.Outlined.DirectionsRun, "Biegowe",
+                onClick = { routeShortcutOnClickFactory(RoutesQuery(activityType = ActivityType.RUN)) }
+            )
+            NavDrawerItem(Icons.Outlined.QuestionMark, "Pętle",
+                onClick = { routeShortcutOnClickFactory(RoutesQuery(routeType = RouteType.LOOP)) }
+            )
+            NavDrawerItem(Icons.Outlined.Route, "Jednokierunkowe",
+                onClick = { routeShortcutOnClickFactory(RoutesQuery(routeType = RouteType.ONEWAY)) }
+            )
+            NavDrawerItem(Icons.Outlined.QuestionMark, "Krótkie")
+            NavDrawerItem(Icons.Outlined.QuestionMark, "Długie")
+
+            HorizontalDivider(modifier = Modifier.width(180.dp).align(Alignment.CenterHorizontally))
+
+            NavDrawerItem(Icons.Outlined.Info, "O aplikacji")
+            NavDrawerItem(Icons.Outlined.Settings, "Ustawienia")
+
+            if (user != null) {
+                NavDrawerItem(Icons.AutoMirrored.Outlined.Logout, "Wyloguj", onClick = {
+                    authViewModel.logout()
+                })
+            } else {
+                val intent = Intent(LocalActivity.current, LoginActivity::class.java)
+                NavDrawerItem(Icons.AutoMirrored.Outlined.Login, "Zaloguj", onClick = {
+                    startActivity(intent)
+                })
+            }
+        }
+    }
+
+    @Composable
+    fun NavDrawerHeading(text: String, modifier: Modifier = Modifier) {
+        Text(text, style = MaterialTheme.typography.headlineSmall, modifier = modifier.padding(8.dp))
+    }
+
+    @Composable
+    fun NavDrawerItem(icon: ImageVector, text: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable { onClick?.invoke() }
+        ) {
+            Icon(imageVector = icon, contentDescription = null)
+            Text(text)
         }
     }
 
