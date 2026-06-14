@@ -2,14 +2,42 @@ package com.example.routeserver.data
 
 import com.example.shared.RouteDetails
 import com.example.shared.RouteSummary
+import com.example.shared.RoutesQuery
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.like
+import org.jetbrains.exposed.v1.core.or
+import org.jetbrains.exposed.v1.jdbc.andWhere
+import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 class RoutesRepository {
-    fun getRoutes(): List<RouteSummary> {
+    fun getRoutes(query: RoutesQuery?): List<RouteSummary> {
         val routeSummaries: List<RouteSummary> = transaction {
-            RoutesTable.selectAll().map {
+            val q = RoutesTable.select(RoutesTable.summaryColumns)
+
+            val search = query?.search
+            search?.let {
+                q.andWhere {
+                    (RoutesTable.name like "%${search}%") or
+                    (RoutesTable.description like "%${search}%")
+                }
+            }
+
+            val activityType = query?.activityType
+            activityType?.let {
+                q.andWhere { RoutesTable.activityType eq activityType }
+            }
+
+            val routeType = query?.routeType
+            routeType?.let {
+                q.andWhere { RoutesTable.routeType eq routeType }
+            }
+
+            q.offset(query?.offset ?: 0) // legacy support elvis consts
+            q.limit(query?.count ?: 100)
+
+            q.map {
                 RouteSummary(
                     id = it[RoutesTable.id],
                     name = it[RoutesTable.name],

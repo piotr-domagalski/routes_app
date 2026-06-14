@@ -2,6 +2,7 @@ package com.example.routesapp.data
 
 import com.example.shared.RouteDetails
 import com.example.shared.RouteSummary
+import com.example.shared.RoutesQuery
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -16,8 +17,38 @@ open class RoutesRepository(
     val route = _routeDetails.asStateFlow()
     val routeLookupError = _routeLookupError.asStateFlow()
 
+    var query = MutableStateFlow(RoutesQuery(count=10))
+
     open suspend fun loadRoutes() {
-        _routeSummaries.value = api.getRoutes()
+        val q = query.value.withBounds(offset = 0)
+        query.value = q
+
+        println("loading routes. query=${q}")
+
+        _routeSummaries.value = api.getRoutes(
+            q.search,
+            q.activityType,
+            q.routeType,
+            q.count,
+            q.offset
+        )
+    }
+
+    open suspend fun loadMoreRoutes() {
+        query.value = query.value.withBounds(
+            offset = query.value.offset + query.value.count
+        )
+        val q = query.value
+
+        println("loading more routes. query=${q}")
+
+        _routeSummaries.value += api.getRoutes(
+            q.search,
+            q.activityType,
+            q.routeType,
+            q.count,
+            q.offset
+        )
     }
 
     open suspend fun loadRouteById(id: Int) {

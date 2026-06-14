@@ -28,7 +28,7 @@ class RouteListActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding),
-                        alternateRowColours = true,
+                        alternatingRowColours = true,
                         onClick = { route ->
                             val intent = Intent(
                             context,

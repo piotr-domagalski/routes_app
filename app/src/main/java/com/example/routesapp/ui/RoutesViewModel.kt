@@ -19,12 +19,20 @@ class RoutesViewModel(
     val routeLookupError = repository.routeLookupError
 
     init {
-        loadRoutes()
+        if (repository.routes.value.isEmpty()) {
+            loadRoutes()
+        }
     }
 
     fun loadRoutes() {
         viewModelScope.launch {
             repository.loadRoutes()
+        }
+    }
+
+    fun loadMoreRoutes() {
+        viewModelScope.launch {
+            repository.loadMoreRoutes()
         }
     }
 

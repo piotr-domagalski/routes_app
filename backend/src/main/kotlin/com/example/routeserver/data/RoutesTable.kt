@@ -13,4 +13,6 @@ object RoutesTable : Table("routes") {
     val activityType = enumerationByName("activity", 10, ActivityType::class)
 
     override val primaryKey = PrimaryKey(id)
+
+    val summaryColumns = listOf(id, name, distanceMeters, routeType, activityType)
 }

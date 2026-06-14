@@ -52,6 +52,7 @@ class RouteCombinedActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding)
+                            .fillMaxSize()
                     )
                 }
             }
@@ -80,7 +81,7 @@ class RouteCombinedActivity : ComponentActivity() {
         val context = LocalContext.current
         RouteListScreen(
             modifier = modifier,
-            alternateRowColours = true,
+            alternatingRowColours = true,
             onClick = { route ->
                 val intent = Intent(
                     context,
@@ -104,7 +105,7 @@ class RouteCombinedActivity : ComponentActivity() {
 
             RouteListScreen(
                 modifier = Modifier.width(combinedListWidthDp),
-                alternateRowColours = true,
+                alternatingRowColours = true,
                 onClick = { route ->
                     if (routesViewModel.route.value?.summary?.id == route.id) {
                         routesViewModel.forgetRoute()

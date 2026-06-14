@@ -76,7 +76,7 @@ class AuthService(val usersRepository: UsersRepository, val sessionsRepository: 
 
     @OptIn(ExperimentalTime::class)
     private fun newExpirationTime(): LocalDateTime {
-        return (Clock.System.now() + 1.minutes).toLocalDateTime(TimeZone.currentSystemDefault())
+        return (Clock.System.now() + 30.minutes).toLocalDateTime(TimeZone.currentSystemDefault())
     }
 
 }
