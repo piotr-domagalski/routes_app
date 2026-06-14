@@ -58,6 +58,7 @@ dependencies {
 
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.ui)
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)

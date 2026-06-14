@@ -36,6 +36,16 @@ class WorkoutsViewModel(
         }
     }
 
+    fun getRecentByUser(user: String) {
+        viewModelScope.launch {
+            _workoutSummaries.value = repository.getWorkouts(
+                WorkoutsQuery(
+                    username = user,
+                    sort = WorkoutsQuerySortOrder.RECENT
+                )
+            )
+        }
+    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
