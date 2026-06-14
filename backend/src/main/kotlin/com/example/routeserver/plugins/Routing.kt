@@ -25,7 +25,7 @@ fun Application.configureRouting() {
     val workoutsRepository = WorkoutsRepository()
     val authService = AuthService(usersRepository, sessionsRepository)
 
-    seedDevData(authService, workoutsRepository)
+    seedDevData(authService, workoutsRepository, routesRepository)
 
     routing {
         routeInfoRoutes(routesRepository)

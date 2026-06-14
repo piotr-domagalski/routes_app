@@ -3,10 +3,12 @@ package com.example.routeserver.data
 import com.example.shared.RouteDetails
 import com.example.shared.RouteSummary
 import com.example.shared.RoutesQuery
+import org.jetbrains.exposed.v1.core.StdOutSqlLogger
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.like
 import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.jdbc.andWhere
+import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -75,6 +77,20 @@ class RoutesRepository {
             routes.first()
         } else {
             error("Multiple rows found for id=$id")
+        }
+    }
+
+    fun insertRoute(route: RouteDetails) {
+        transaction {
+            addLogger(StdOutSqlLogger)
+            RoutesTable.insert {
+                it[RoutesTable.id] = route.summary.id
+                it[RoutesTable.name] = route.summary.name
+                it[RoutesTable.distanceMeters] = route.summary.distanceMeters
+                it[RoutesTable.activityType] = route.summary.activityType
+                it[RoutesTable.routeType] = route.summary.routeType
+                it[RoutesTable.description] = route.description
+            }
         }
     }
 }

@@ -1,8 +1,11 @@
 package com.example.routeserver.data
 
+import com.example.shared.ActivityType
 import com.example.shared.RegistrationRequest
+import com.example.shared.RouteDetails
+import com.example.shared.RouteSummary
+import com.example.shared.RouteType
 import com.example.shared.WorkoutSummary
-import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalTime
 import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.core.eq
@@ -16,27 +19,44 @@ fun countRows(table: Table): Long {
         return@transaction table.selectAll().count()
     }
 }
-@OptIn(ExperimentalTime::class)
-fun seedDevData(authService: AuthService, workoutsRepository: WorkoutsRepository) {
+fun seedDevData(authService: AuthService, workoutsRepository: WorkoutsRepository, routesRepository: RoutesRepository) {
     println("seeding with debug data...")
+    seedDevRoutes(routesRepository)
+    seedDevUsers(authService)
+    seedDevWorkouts(workoutsRepository)
+    println("\tseeding done.")
+}
+
+fun seedDevRoutes(routesRepository: RoutesRepository) {
+    if (countRows(RoutesTable) > 0L) {
+        println("\troutes table not empty, refusing.")
+    } else {
+        println("\tcreating routes...")
+
+        for (route in SEED_ROUTES) {
+            println("\tadding route: $route")
+            routesRepository.insertRoute(route)
+        }
+
+        println("\tRoutes count: ${countRows(RoutesTable)}")
+    }
+}
+
+fun seedDevUsers(authService: AuthService) {
     if (countRows(UsersTable) > 0L) {
         println("\tusers table not empty, refusing.")
     } else {
         println("\tcreating users...")
-        authService.register(
-            RegistrationRequest(
-                username = "alice",
-                password = "alice123"
-            ))
-        authService.register(
-            RegistrationRequest(
-                username = "bob",
-                password = "bob123"
-            ))
+
+        for (req in SEED_REGISTRATION_REQUESTS) {
+            authService.register(req)
+        }
 
         println("Users count: ${countRows(UsersTable)}")
     }
+}
 
+fun seedDevWorkouts(workoutsRepository: WorkoutsRepository) {
     if (countRows(WorkoutsTable) > 0L) {
         println("\tworkouts table not empty, refusing.")
     } else {
@@ -46,92 +66,261 @@ fun seedDevData(authService: AuthService, workoutsRepository: WorkoutsRepository
             val users = UsersTable.selectAll().toList()
             println(users)
 
-            val exists_alice = UsersTable
+            val existsAlice = UsersTable
                 .selectAll()
                 .where { UsersTable.username eq "alice" }
                 .count()
 
-            println("\t\talice exists: $exists_alice")
+            println("\t\talice exists: $existsAlice")
 
             val routes = RoutesTable.selectAll().toList()
             println(routes)
 
-            val exists_0 = RoutesTable
+            val existsRoute0 = RoutesTable
                 .selectAll()
                 .where { RoutesTable.id eq 0 }
                 .count()
 
-            println("\t\troute 0 exists: $exists_0")
+            println("\t\troute 0 exists: $existsRoute0")
         }
 
-
-        val workouts = listOf(
-            WorkoutSummary(
-                user = "alice",
-                route = 1,
-                timestamp = Instant.parse("2026-04-10T16:00:00Z"),
-                duration = LocalTime.parse("01:10:00"),
-                private = false
-            ),
-            WorkoutSummary(
-                user = "alice",
-                route = 2,
-                timestamp = Instant.parse("2026-04-15T16:00:00Z"),
-                duration = LocalTime.parse("00:30:00"),
-                private = false
-            ),
-            WorkoutSummary(
-                user = "alice",
-                route = 2,
-                timestamp = Instant.parse("2026-04-20T16:00:00Z"),
-                duration = LocalTime.parse("00:25:00"),
-                private = true
-            ),
-            WorkoutSummary(
-                user = "alice",
-                route = 3,
-                timestamp = Instant.parse("2026-04-25T16:00:00Z"),
-                duration = LocalTime.parse("02:15:00"),
-                private = true
-            ),
-            WorkoutSummary(
-                user = "bob",
-                route = 1,
-                timestamp = Instant.parse("2026-04-12T16:00:00Z"),
-                duration = LocalTime.parse("01:23:00"),
-                private = false
-            ),
-            WorkoutSummary(
-                user = "bob",
-                route = 2,
-                timestamp = Instant.parse("2026-04-17T16:00:00Z"),
-                duration = LocalTime.parse("00:18:00"),
-                private = false
-            ),
-            WorkoutSummary(
-                user = "bob",
-                route = 2,
-                timestamp = Instant.parse("2026-04-22T16:00:00Z"),
-                duration = LocalTime.parse("00:35:00"),
-                private = true
-            ),
-            WorkoutSummary(
-                user = "bob",
-                route = 3,
-                timestamp = Instant.parse("2026-04-27T16:00:00Z"),
-                duration = LocalTime.parse("01:45:00"),
-                private = false
-            )
-        )
-
-        for (workout in workouts) {
+        for (workout in SEED_WORKOUTS) {
             println("\tadding workout: $workout")
             workoutsRepository.insertWorkout(
                 workout
             )
         }
+
         println("\tWorkouts count: ${countRows(WorkoutsTable)}")
     }
-
-    println("\tseeding done.")
 }
+
+val SEED_ROUTES: List<RouteDetails> = listOf(
+    RouteDetails(
+        RouteSummary(
+            id = 1,
+            name = "Wartostrada Pętla",
+            distanceMeters = 15670,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.BOTH,
+        ),
+        description = "pełna pętla"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 2,
+            name = "Wartostrada Asfalt",
+            distanceMeters = 10150,
+            routeType = RouteType.ONEWAY,
+            activityType = ActivityType.BOTH,
+        ),
+        description = "odcinek przejeżdżalny asfaltem"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 3,
+            name = "Cytadela",
+            distanceMeters = 5200,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.BOTH,
+        ),
+        description = "opis cytadeli"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 4,
+            name = "Kierskie",
+            distanceMeters = 8230,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.BOTH,
+        ),
+        description = "pętla wokół jeziora kierskiego"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 5,
+            name = "Cytadela Sprint",
+            distanceMeters = 753,
+            routeType = RouteType.ONEWAY,
+            activityType = ActivityType.RUN,
+        ),
+        description = "to jest test wyświetlania długości w metrach"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 6,
+            name = "Puszczykowo i z powrotem",
+            distanceMeters = 42690,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.BOTH,
+        ),
+        description = "ktor wita"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 7,
+            name = "Poznań - Piła",
+            distanceMeters = 120000,
+            routeType = RouteType.ONEWAY,
+            activityType = ActivityType.BIKE,
+        ),
+        description = "chce ci się? fr?"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 8,
+            name = "Las w wiosce",
+            distanceMeters = 13370,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.BIKE,
+        ),
+        description = "idk dodaję żeby lista musiała się scrollować"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 9,
+            name = "Trasa z długim opisem",
+            distanceMeters = 69420,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.RUN,
+        ),
+        description = """
+            |To jest trasa z bardzo długim opisem.
+            |Jest długi ponieważ trasa ta jest bardzo ciekawa i wymaga długiego opisu by w pełni oddać jej ciekawość. 
+            |Gdyby opis był krótki to nie opisywałby odpowiednio szczegółowo tej trasy, dlatego jest długi.
+            """.trimMargin()
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 10,
+            name = "Kolejna trasa",
+            distanceMeters = 28008,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.BIKE,
+        ),
+        description = "kończą mi się śmieszne liczby :'("
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 11,
+            name = "A co gdyby",
+            distanceMeters = 67,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.BIKE,
+        ),
+        description = "dwucyfrowy dystans"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 12,
+            name = "Spacer do biedry",
+            distanceMeters = 278,
+            routeType = RouteType.ONEWAY,
+            activityType = ActivityType.RUN,
+        ),
+        description = "po dwunastopak żubra"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 13,
+            name = "Spacer do kerfa",
+            distanceMeters = 1476,
+            routeType = RouteType.LOOP,
+            activityType = ActivityType.RUN,
+        ),
+        description = "po prawdziwe piwo, i powrót bo nie jestem alkoholikiem i mogę dojść do domu o własnych siłach"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 14,
+            name = "Do lodówki",
+            distanceMeters = 3,
+            routeType = RouteType.ONEWAY,
+            activityType = ActivityType.RUN,
+        ),
+        description = "otworzyć kolejnego żubra"
+    ),
+    RouteDetails(
+        RouteSummary(
+            id = 15,
+            name = "Na Księżyc",
+            distanceMeters = 384400000,
+            routeType = RouteType.ONEWAY,
+            activityType = ActivityType.RUN,
+        ),
+        description = "endurance run world record"
+    )
+)
+
+val SEED_REGISTRATION_REQUESTS: List<RegistrationRequest> = listOf(
+    RegistrationRequest(
+        username = "alice",
+        displayName = "Alice",
+        password = "alice123"
+    ),
+    RegistrationRequest(
+        username = "bob",
+        displayName = "Bob",
+        password = "bob123"
+    )
+)
+
+@OptIn(ExperimentalTime::class)
+val SEED_WORKOUTS: List<WorkoutSummary> = listOf(
+    WorkoutSummary(
+        user = "alice",
+        route = 1,
+        timestamp = Instant.parse("2026-04-10T16:00:00Z"),
+        duration = LocalTime.parse("01:10:00"),
+        private = false
+    ),
+    WorkoutSummary(
+        user = "alice",
+        route = 2,
+        timestamp = Instant.parse("2026-04-15T16:00:00Z"),
+        duration = LocalTime.parse("00:30:00"),
+        private = false
+    ),
+    WorkoutSummary(
+        user = "alice",
+        route = 2,
+        timestamp = Instant.parse("2026-04-20T16:00:00Z"),
+        duration = LocalTime.parse("00:25:00"),
+        private = true
+    ),
+    WorkoutSummary(
+        user = "alice",
+        route = 3,
+        timestamp = Instant.parse("2026-04-25T16:00:00Z"),
+        duration = LocalTime.parse("02:15:00"),
+        private = true
+    ),
+    WorkoutSummary(
+        user = "bob",
+        route = 1,
+        timestamp = Instant.parse("2026-04-12T16:00:00Z"),
+        duration = LocalTime.parse("01:23:00"),
+        private = false
+    ),
+    WorkoutSummary(
+        user = "bob",
+        route = 2,
+        timestamp = Instant.parse("2026-04-17T16:00:00Z"),
+        duration = LocalTime.parse("00:18:00"),
+        private = false
+    ),
+    WorkoutSummary(
+        user = "bob",
+        route = 2,
+        timestamp = Instant.parse("2026-04-22T16:00:00Z"),
+        duration = LocalTime.parse("00:35:00"),
+        private = true
+    ),
+    WorkoutSummary(
+        user = "bob",
+        route = 3,
+        timestamp = Instant.parse("2026-04-27T16:00:00Z"),
+        duration = LocalTime.parse("01:45:00"),
+        private = false
+    )
+)
