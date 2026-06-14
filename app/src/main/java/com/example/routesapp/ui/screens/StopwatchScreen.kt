@@ -5,24 +5,26 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.RestartAlt
+import androidx.compose.material.icons.outlined.Upload
 import androidx.compose.material3.Button
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.routesapp.R
 import com.example.routesapp.ui.StopwatchViewModel
 import com.example.routesapp.ui.theme.RoutesAppTheme
 
@@ -42,53 +44,47 @@ fun StopwatchScreen(modifier: Modifier = Modifier) {
         )
         val buttonModifier = Modifier.size(64.dp).padding(0.dp)
         val buttonContentPadding = PaddingValues.Zero
-        val imageModifier = Modifier.size(40.dp)
+        val imageModifier = Modifier.size(48.dp).fillMaxSize()
         Row(modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Button(onClick = {stopwatchViewModel.upload()},
+            Button(
+                onClick = {stopwatchViewModel.upload()},
                 modifier = buttonModifier,
-                contentPadding = buttonContentPadding,
-            ) {
+                contentPadding = buttonContentPadding
+                ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_upload),
+                    imageVector = Icons.Outlined.Upload,
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(LocalContentColor.current),
                     modifier = imageModifier
                 )
             }
-            Button(onClick = {
-                stopwatchViewModel.toggle()
-            },
+            Button(
+                onClick = { stopwatchViewModel.toggle() },
                 modifier = buttonModifier,
-                contentPadding = buttonContentPadding,
-                ) {
+                contentPadding = buttonContentPadding
+            ) {
                 if(stopwatchViewModel.isRunning.collectAsState().value) {
                     Image(
-                        painter = painterResource(R.drawable.ic_stop),
+                        imageVector = Icons.Outlined.Pause,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(LocalContentColor.current),
                         modifier = imageModifier
                     )
                 } else {
-                    Image(
-                        painter = painterResource(R.drawable.ic_start),
+                    Image(imageVector = Icons.Outlined.PlayArrow,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(LocalContentColor.current),
                         modifier = imageModifier
                     )
                 }
             }
-            Button(onClick = {
-                stopwatchViewModel.reset()
-            },
+            Button(
+                onClick = { stopwatchViewModel.reset() },
                 modifier = buttonModifier,
-                contentPadding = buttonContentPadding,
-                ) {
+                contentPadding = buttonContentPadding
+            ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_reset),
+                    imageVector = Icons.Outlined.RestartAlt,
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(LocalContentColor.current),
                     modifier = imageModifier
                 )
             }
