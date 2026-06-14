@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +36,7 @@ fun RouteSummaryHeader(route: RouteSummary, modifier: Modifier = Modifier) {
             )
         }
         ActivityTypeIcon(route.activityType)
-        RouteTypeIcon(route.routeType)
+        RouteTypeIcon(route.routeType, modifier = Modifier.size(48.dp))
     }
 }
 

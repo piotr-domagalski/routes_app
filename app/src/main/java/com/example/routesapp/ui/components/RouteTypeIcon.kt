@@ -16,10 +16,9 @@ import com.example.routesapp.ui.theme.RoutesAppTheme
 import com.example.shared.RouteType
 
 @Composable
-fun RouteTypeIcon(type: RouteType) {
+fun RouteTypeIcon(type: RouteType, modifier: Modifier = Modifier) {
     val colourOn = LocalContentColor.current
     val colourOff = LocalContentColor.current.copy(alpha = 0.25f)
-    val imageModifier = Modifier.size(48.dp)
     when (type) {
         RouteType.LOOP -> {
             Box {
@@ -27,13 +26,13 @@ fun RouteTypeIcon(type: RouteType) {
                     painter = painterResource(R.drawable.ic_oneway_grayout),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(colourOff),
-                    modifier = imageModifier
+                    modifier = modifier
                 )
                 Image(
                     painter = painterResource(R.drawable.ic_loop),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(colourOn),
-                    modifier = imageModifier
+                    modifier = modifier
                 )
             }
         }
@@ -43,13 +42,13 @@ fun RouteTypeIcon(type: RouteType) {
                     painter = painterResource(R.drawable.ic_loop_grayout),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(colourOff),
-                    modifier = imageModifier
+                    modifier = modifier
                 )
                 Image(
                     painter = painterResource(R.drawable.ic_oneway),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(colourOn),
-                    modifier = imageModifier
+                    modifier = modifier
                 )
             }
         }
@@ -57,12 +56,12 @@ fun RouteTypeIcon(type: RouteType) {
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 fun RouteTypeIconPreview() {
     RoutesAppTheme {
         Row {
-            RouteTypeIcon(RouteType.ONEWAY)
-            RouteTypeIcon(RouteType.LOOP)
+            RouteTypeIcon(RouteType.ONEWAY, Modifier.size(48.dp))
+            RouteTypeIcon(RouteType.LOOP, Modifier.size(48.dp))
         }
     }
 }

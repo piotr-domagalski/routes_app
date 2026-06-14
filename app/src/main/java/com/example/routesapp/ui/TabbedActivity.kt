@@ -175,7 +175,7 @@ class TabbedActivity : ComponentActivity() {
                     ) { page ->
                         when (page) {
                             0 -> MainScreen()
-                            1 -> RouteListAdaptive(modifier = Modifier.fillMaxSize())
+                            1 -> RouteListAdaptive(false, modifier = Modifier.fillMaxSize())
                             2 -> WorkoutRecords()
                         }
                     }
@@ -276,23 +276,23 @@ class TabbedActivity : ComponentActivity() {
         }
     }
     @Composable
-    fun RouteListAdaptive(modifier: Modifier = Modifier) {
+    fun RouteListAdaptive(alternatingRowColours: Boolean, modifier: Modifier = Modifier) {
         val displayMetrics: DisplayMetrics = LocalResources.current.displayMetrics
         val dpWidth = (displayMetrics.widthPixels / displayMetrics.density).dp
 
         if (dpWidth >= combinedListWidthDp*2) {
-            RouteListAndDetails(modifier = modifier)
+            RouteListAndDetails(alternatingRowColours, modifier = modifier)
         } else {
-            RouteListOnly(modifier = modifier)
+            RouteListOnly(alternatingRowColours, modifier = modifier)
         }
     }
 
     @Composable
-    fun RouteListOnly(modifier: Modifier = Modifier) {
+    fun RouteListOnly(alternatingRowColours: Boolean, modifier: Modifier = Modifier) {
         val context = LocalContext.current
         RouteListScreen(
             modifier = modifier,
-            alternatingRowColours = true,
+            alternatingRowColours = alternatingRowColours,
             onClick = { route ->
                 val intent = Intent(
                     context,
@@ -306,7 +306,7 @@ class TabbedActivity : ComponentActivity() {
     }
 
     @Composable
-    fun RouteListAndDetails(modifier: Modifier = Modifier) {
+    fun RouteListAndDetails(alternatingRowColours: Boolean, modifier: Modifier = Modifier) {
         val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
         Row(
             modifier = modifier
@@ -316,7 +316,7 @@ class TabbedActivity : ComponentActivity() {
 
             RouteListScreen(
                 modifier = Modifier.width(combinedListWidthDp),
-                alternatingRowColours = true,
+                alternatingRowColours = alternatingRowColours,
                 onClick = { route ->
                     if (routesViewModel.route.value?.summary?.id == route.id) {
                         routesViewModel.forgetRoute()

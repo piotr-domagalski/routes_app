@@ -2,6 +2,7 @@ package com.example.routesapp.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -18,7 +19,7 @@ import com.example.routesapp.ui.theme.RoutesAppTheme
 import com.example.shared.ActivityType
 
 @Composable
-fun ActivityTypeIcon(type: ActivityType?, modifier: Modifier = Modifier) {
+fun HorizontalActivityTypeIcon(type: ActivityType?, modifier: Modifier = Modifier) {
     val colourOn = LocalContentColor.current
     val colourOff = LocalContentColor.current.copy(alpha = 0.25f)
     val bikeColour = when (type) {
@@ -31,8 +32,9 @@ fun ActivityTypeIcon(type: ActivityType?, modifier: Modifier = Modifier) {
         ActivityType.BOTH -> colourOn
         else -> colourOff
     }
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
         Image(
@@ -60,13 +62,13 @@ fun ActivityTypeIcon(type: ActivityType?, modifier: Modifier = Modifier) {
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
-fun ActivityTypeIconPreview() {
+fun HorizontalActivityTypeIconPreview() {
     RoutesAppTheme {
-        Row {
-            ActivityTypeIcon(null)
-            ActivityTypeIcon(ActivityType.RUN)
-            ActivityTypeIcon(ActivityType.BIKE)
-            ActivityTypeIcon(ActivityType.BOTH)
+        Column {
+            HorizontalActivityTypeIcon(null)
+            HorizontalActivityTypeIcon(ActivityType.RUN)
+            HorizontalActivityTypeIcon(ActivityType.BIKE)
+            HorizontalActivityTypeIcon(ActivityType.BOTH)
         }
     }
 }

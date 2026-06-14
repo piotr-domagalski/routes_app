@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
@@ -42,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.ui.RouteSearchViewModel
 import com.example.routesapp.ui.RoutesViewModel
+import com.example.routesapp.ui.components.RouteSummaryGridTile
 import com.example.routesapp.ui.components.RouteSummaryHeader
 import com.example.shared.ActivityType
 import com.example.shared.RouteSummary
@@ -123,15 +127,16 @@ fun RouteList(
             .collect { (atEnd, _) -> if (atEnd) {viewModel.loadMoreRoutes()} }
     }
 
-    LazyColumn(
+    LazyVerticalGrid(
         modifier = modifier,
-        contentPadding = PaddingValues(vertical = 8.dp)
+        columns = GridCells.Adaptive(300.dp),
+        contentPadding = PaddingValues(vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         itemsIndexed(routes) { index, route ->
             val bg = highlightCallback?.invoke(route) ?:
-                if (!alternatingRowColours) {
-                    MaterialTheme.colorScheme.surface
-                } else if (index % 2 == 0) {
+                if (!alternatingRowColours || index % 2 == 0) {
                     MaterialTheme.colorScheme.surfaceContainer
                 } else {
                     MaterialTheme.colorScheme.surfaceContainerLow
@@ -139,7 +144,7 @@ fun RouteList(
             Surface(
                 color = bg
             ) {
-                RouteSummaryHeader(
+                RouteSummaryGridTile(
                     route,
                     modifier = Modifier.clickable {
                         onClick?.invoke(route)
