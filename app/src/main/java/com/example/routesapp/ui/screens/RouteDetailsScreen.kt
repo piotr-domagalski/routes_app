@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -82,7 +83,7 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
                             modifier = Modifier.height(200.dp).fillMaxWidth()
                         )
                     }
-                    LargeFloatingActionButton(onClick = {
+                    FloatingActionButton(onClick = {
                         sheetOpen.value = !sheetOpen.value
                     },
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -92,12 +93,12 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
                             // TODO: animate the clock hand instead
                             Image(imageVector = Icons.Filled.Timer,
                                 contentDescription = null,
-                                modifier = Modifier.size(64.dp)
+                                modifier = Modifier.size(48.dp)
                             )
                         } else {
                             Image(imageVector = Icons.Outlined.Timer,
                                 contentDescription = null,
-                                modifier = Modifier.size(64.dp)
+                                modifier = Modifier.size(48.dp)
                             )
 
                         }
