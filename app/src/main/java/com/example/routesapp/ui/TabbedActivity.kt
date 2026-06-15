@@ -59,7 +59,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,10 +78,12 @@ import com.example.routesapp.ui.viewmodels.WorkoutsViewModel
 import com.example.shared.ActivityType
 import com.example.shared.RouteType
 import com.example.shared.RoutesQuery
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 class TabbedActivity : ComponentActivity() {
     val combinedListWidthDp = 320.dp
+    val masterDetailCutoffWidthDp = 1000.dp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,14 +100,19 @@ class TabbedActivity : ComponentActivity() {
 
         setContent {
             RoutesAppTheme {
-                TabbedLayout()
+                val widthDp = LocalWindowInfo.current.containerDpSize.width
+                when {
+                    widthDp < 600.dp -> CompactLayout()
+                    widthDp < masterDetailCutoffWidthDp -> MediumLayout()
+                    else -> ExpandedLayout()
+                }
             }
         }
     }
 
     @Composable
     @Preview(showBackground = true)
-    fun TabbedLayout() {
+    fun CompactLayout() {
         val pagerState = rememberPagerState(pageCount = {
             3
         })
@@ -121,96 +130,127 @@ class TabbedActivity : ComponentActivity() {
         ) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
-                topBar = { TopAppBar(
-                    title = {
-                        Text(
-                            text = (when (pagerState.currentPage) {
-                                0 -> "Routes App"
-                                1 -> if (route != null) {
-                                    "Szczegóły"
-                                } else {
-                                    "Trasy"
-                                }
-                                2 -> "Historia"
-                                else -> ""
-                            }),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    },
-                    navigationIcon = { IconButton(
-                        onClick = { scope.launch {
-                            if (drawerState.isOpen) { drawerState.close() }
-                            else { drawerState.open() }
-                        }}
-                    ) {
-                        Icon(imageVector =
-                            if (drawerState.isOpen) {
-                                Icons.AutoMirrored.Filled.MenuOpen
-                            }
-                            else {
-                                Icons.Default.Menu
-                            },
-                            contentDescription = null
-                        )
-                    }},
-                    actions = {
-                        IconButton(
-                            enabled = pagerState.currentPage == 1 && route != null,
-                            onClick = {routesViewModel.forgetRoute()}
-                        ) {
-                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null )
-                        }
-                    }
-                ) },
-                bottomBar = { NavigationBar {
-                    listOf(
-                        Pair("Główna", Icons.Default.Home),
-                        Pair("Trasy", Icons.Default.Route),
-                        Pair("Historia", Icons.Default.History)
-                    ).forEachIndexed { index, (title, icon) ->
-                        NavigationBarItem(
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                scope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            },
-                            icon = { Icon(imageVector = icon, contentDescription = null) },
-                            label = { Text(title) }
-                        )
-                    }
-                }}
+                topBar = { TopBar(pagerState, drawerState, scope) },
+                bottomBar = { NavBar(pagerState, scope) }
             ) { innerPadding ->
-                Column(modifier = Modifier
+                ContentTabs(pagerState, modifier = Modifier
                     .padding(innerPadding)
                     .consumeWindowInsets(innerPadding)
                     .fillMaxSize()
                     .padding(8.dp)
-                    // TODO: .clip(MaterialTheme.shapes.large)
-                ) {
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier.fillMaxSize()
-                    ) { page ->
-                        when (page) {
-                            0 -> MainScreen()
-                            1 -> {
-                                if (route == null) {
-                                    RouteList(false, modifier = Modifier.fillMaxSize())
-                                } else {
-                                    RouteDetailsScreen(modifier = Modifier.fillMaxSize())
-                                }
-                            }
-                            2 -> WorkoutRecords()
-                        }
-                    }
-                }
+                // TODO: .clip(MaterialTheme.shapes.large)
+                )
             }
-
         }
     }
 
+    @Composable
+    fun MediumLayout() {
+        Text("Medium")
+        CompactLayout()
+    }
+
+    @Composable
+    fun ExpandedLayout() {
+        Text("Expanded")
+        CompactLayout()
+    }
+
+    @Composable
+    fun TopBar(pagerState: PagerState, drawerState: DrawerState, scope: CoroutineScope) {
+        val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
+        val route = routesViewModel.route.collectAsState().value
+        TopAppBar(
+            title = {
+                Text(
+                    text = (when (pagerState.currentPage) {
+                        0 -> "Routes App"
+                        1 -> if (route != null) {
+                            "Szczegóły"
+                        } else {
+                            "Trasy"
+                        }
+                        2 -> "Historia"
+                        else -> ""
+                    }),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            navigationIcon = { IconButton(
+                onClick = { scope.launch {
+                    if (drawerState.isOpen) { drawerState.close() }
+                    else { drawerState.open() }
+                }}
+            ) {
+                Icon(imageVector =
+                    if (drawerState.isOpen) {
+                        Icons.AutoMirrored.Filled.MenuOpen
+                    }
+                    else {
+                        Icons.Default.Menu
+                    },
+                    contentDescription = null
+                )
+            }},
+            actions = {
+                IconButton(
+                    enabled = pagerState.currentPage == 1 && route != null,
+                    onClick = {routesViewModel.forgetRoute()}
+                ) {
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null )
+                }
+            }
+        )
+    }
+
+    @Composable
+    fun NavBar(pagerState: PagerState, scope: CoroutineScope) {
+        NavigationBar {
+            listOf(
+                Pair("Główna", Icons.Default.Home),
+                Pair("Trasy", Icons.Default.Route),
+                Pair("Historia", Icons.Default.History)
+            ).forEachIndexed { index, (title, icon) ->
+                NavigationBarItem(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    icon = { Icon(imageVector = icon, contentDescription = null) },
+                    label = { Text(title) }
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun ContentTabs(pagerState: PagerState, modifier: Modifier = Modifier) {
+        val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
+        val route = routesViewModel.route.collectAsState().value
+        Column(modifier = modifier
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                when (page) {
+                    0 -> MainScreen()
+                    1 -> {
+                        if (route == null) {
+                            RouteListAdaptive(false, modifier = Modifier.fillMaxSize())
+                        } else {
+                            RouteDetailsScreen(modifier = Modifier.fillMaxSize())
+                        }
+                    }
+                    2 -> WorkoutRecords()
+                }
+            }
+        }
+
+    }
 
     @Composable
     fun NavDrawerContent(drawerState: DrawerState, pagerState: PagerState) {
@@ -303,13 +343,11 @@ class TabbedActivity : ComponentActivity() {
     }
     @Composable
     fun RouteListAdaptive(alternatingRowColours: Boolean, modifier: Modifier = Modifier) {
-        val displayMetrics: DisplayMetrics = LocalResources.current.displayMetrics
-        val dpWidth = (displayMetrics.widthPixels / displayMetrics.density).dp
-
-        if (dpWidth >= combinedListWidthDp*2) {
-            RouteListAndDetails(alternatingRowColours, modifier = modifier)
-        } else {
+        val widthDp = LocalWindowInfo.current.containerDpSize.width
+        if (widthDp < masterDetailCutoffWidthDp) {
             RouteList(alternatingRowColours, modifier = modifier)
+        } else {
+            RouteListAndDetails(alternatingRowColours, modifier = modifier)
         }
     }
 
