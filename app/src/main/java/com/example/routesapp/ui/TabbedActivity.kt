@@ -7,6 +7,10 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -62,14 +66,26 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.RoutesApp
@@ -85,7 +101,11 @@ import com.example.shared.ActivityType
 import com.example.shared.RouteType
 import com.example.shared.RoutesQuery
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
+
 @OptIn(ExperimentalMaterial3Api::class)
 class TabbedActivity : ComponentActivity() {
     val combinedListWidthDp = 320.dp
@@ -116,6 +136,14 @@ class TabbedActivity : ComponentActivity() {
                 val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
                 val route = routesViewModel.route.collectAsState().value
 
+                val showSplash = rememberSaveable { mutableStateOf(true) }
+
+                LaunchedEffect(Unit) {
+                    delay(2000)
+                    showSplash.value = false
+                }
+
+
                 BackHandler(enabled = (pagerState.currentPage == 1 && route != null) ) {
                     routesViewModel.forgetRoute()
                 }
@@ -142,7 +170,86 @@ class TabbedActivity : ComponentActivity() {
                         else -> ExpandedLayout(pagerState, drawerState, scrollBehavior, scope)
                     }
                 }
+
+                if (showSplash.value) {
+                    SplashAnimation()
+                }
             }
+        }
+    }
+
+    @Composable
+    @Preview(showBackground = true)
+    fun SplashAnimation() {
+        val progress = remember { Animatable(0f) }
+
+        LaunchedEffect(Unit) {
+            progress.animateTo(
+                1.5f,
+                tween(2000, easing = FastOutSlowInEasing)
+            )
+        }
+
+        val fg = MaterialTheme.colorScheme.primary
+        val bg = MaterialTheme.colorScheme.surface
+
+        Canvas(modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer {
+                this.alpha = min(1.0f, (1.5f-progress.value)*2f)
+            }
+        ) {
+            drawRect(color = bg)
+
+            val designWidth = 100f
+            val designHeight = 100f
+
+            val scaleX = size.width / designWidth
+            val scaleY = size.height / designHeight
+
+            fun sx(x: Float) = x * scaleX
+            fun sy(y: Float) = y * scaleY
+
+            val path = Path().apply {
+                moveTo(sx(10f), sy(80f))
+                cubicTo(
+                    sx(30f), sy(10f),
+                    sx(70f), sy(90f),
+                    sx(90f), sy(20f)
+                )
+            }
+
+
+
+            val measure = PathMeasure()
+            measure.setPath(path, false)
+            val markerDistance = progress.value * measure.length
+            val markerPos = measure.getPosition(markerDistance)
+
+            val pathBefore = Path()
+
+            measure.getSegment(0f, markerDistance, pathBefore)
+
+            drawPath(
+                path = path,
+                color = fg,
+                style = Stroke(width = 12f,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f))
+                )
+            )
+
+            drawPath(
+                path = pathBefore,
+                color = fg,
+                style = Stroke(width = 12f)
+            )
+
+
+            drawCircle(
+                color = fg,
+                radius = 30f,
+                center = Offset(markerPos.x, markerPos.y)
+            )
         }
     }
 
