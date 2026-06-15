@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -52,6 +53,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -59,6 +62,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -100,67 +104,96 @@ class TabbedActivity : ComponentActivity() {
 
         setContent {
             RoutesAppTheme {
-                val widthDp = LocalWindowInfo.current.containerDpSize.width
-                when {
-                    widthDp < 600.dp -> CompactLayout()
-                    widthDp < masterDetailCutoffWidthDp -> MediumLayout()
-                    else -> ExpandedLayout()
+                val pagerState = rememberPagerState(pageCount = {
+                    3
+                })
+                val scope = rememberCoroutineScope()
+                val drawerState = rememberDrawerState(DrawerValue.Closed)
+                val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+                val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
+                val route = routesViewModel.route.collectAsState().value
+
+                BackHandler(enabled = (pagerState.currentPage == 1 && route != null) ) {
+                    routesViewModel.forgetRoute()
+                }
+
+                ModalNavigationDrawer(drawerState = drawerState,
+                    drawerContent = { NavDrawerContent(drawerState, pagerState) }
+                ) {
+                    val widthDp = LocalWindowInfo.current.containerDpSize.width
+                    when {
+                        widthDp < 600.dp -> CompactLayout(
+                            pagerState,
+                            drawerState,
+                            scrollBehavior,
+                            scope
+                        )
+
+                        widthDp < masterDetailCutoffWidthDp -> MediumLayout(
+                            pagerState,
+                            drawerState,
+                            scrollBehavior,
+                            scope
+                        )
+
+                        else -> ExpandedLayout(pagerState, drawerState, scrollBehavior, scope)
+                    }
                 }
             }
         }
     }
 
     @Composable
-    @Preview(showBackground = true)
-    fun CompactLayout() {
-        val pagerState = rememberPagerState(pageCount = {
-            3
-        })
-        val scope = rememberCoroutineScope()
-        val drawerState = rememberDrawerState(DrawerValue.Closed)
-        val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
-        val route = routesViewModel.route.collectAsState().value
-
-        BackHandler(enabled = (pagerState.currentPage == 1 && route != null) ) {
-            routesViewModel.forgetRoute()
-        }
-
-        ModalNavigationDrawer(drawerState = drawerState,
-            drawerContent = { NavDrawerContent(drawerState, pagerState) }
-        ) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                topBar = { TopBar(pagerState, drawerState, scope) },
-                bottomBar = { NavBar(pagerState, scope) }
-            ) { innerPadding ->
-                ContentTabs(pagerState, modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding)
-                    .fillMaxSize()
-                    .padding(8.dp)
-                // TODO: .clip(MaterialTheme.shapes.large)
-                )
-            }
+    fun CompactLayout(
+        pagerState: PagerState,
+        drawerState: DrawerState,
+        scrollBehavior: TopAppBarScrollBehavior,
+        scope: CoroutineScope
+    ) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = { TopBar(pagerState, drawerState, scope, scrollBehavior) },
+            bottomBar = { NavBar(pagerState, scope) }
+        ) { innerPadding ->
+            ContentTabs(pagerState, modifier = Modifier
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+                .fillMaxSize()
+                .padding(8.dp)
+            // TODO: .clip(MaterialTheme.shapes.large)
+            )
         }
     }
 
     @Composable
-    fun MediumLayout() {
+    fun MediumLayout(
+        pagerState: PagerState,
+        drawerState: DrawerState,
+        scrollBehavior: TopAppBarScrollBehavior,
+        scope: CoroutineScope
+    ) {
         Text("Medium")
-        CompactLayout()
+        CompactLayout(pagerState, drawerState, scrollBehavior, scope)
     }
 
     @Composable
-    fun ExpandedLayout() {
+    fun ExpandedLayout(
+        pagerState: PagerState,
+        drawerState: DrawerState,
+        scrollBehavior: TopAppBarScrollBehavior,
+        scope: CoroutineScope
+    )  {
         Text("Expanded")
-        CompactLayout()
+        CompactLayout(pagerState, drawerState, scrollBehavior, scope)
     }
 
     @Composable
-    fun TopBar(pagerState: PagerState, drawerState: DrawerState, scope: CoroutineScope) {
+    fun TopBar(pagerState: PagerState, drawerState: DrawerState, scope: CoroutineScope, scrollBehavior: TopAppBarScrollBehavior) {
         val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
         val route = routesViewModel.route.collectAsState().value
         TopAppBar(
+            scrollBehavior = scrollBehavior,
             title = {
                 Text(
                     text = (when (pagerState.currentPage) {
@@ -326,7 +359,11 @@ class TabbedActivity : ComponentActivity() {
 
     @Composable
     fun MainScreen() {
-        Text("Tymczasowy ekran główny", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item {
+                Text("Tymczasowy ekran główny", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            }
+        }
     }
 
     @Composable

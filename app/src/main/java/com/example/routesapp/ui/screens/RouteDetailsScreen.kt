@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -77,7 +79,7 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
                         workoutsViewModel.getFastestByRouteId(route.summary.id)
                         RouteHighscoresList(
                             workoutsViewModel.workouts.collectAsState().value,
-                            modifier = Modifier.weight(1f).fillMaxWidth()
+                            modifier = Modifier.height(200.dp).fillMaxWidth()
                         )
                     }
                     LargeFloatingActionButton(onClick = {
