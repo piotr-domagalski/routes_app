@@ -59,27 +59,26 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
             Column(modifier = Modifier.fillMaxSize()) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     workoutsViewModel.getFastestByRouteId(route.summary.id)
-                    Column(modifier = modifier.padding(16.dp)) {
+                    Column(modifier = modifier.padding(16.dp)
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                    ) {
                         RouteSummaryHeader(route.summary)
-                        Column (
-                            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
-                        ) {
-                            val BASE_URL = "http://192.168.1.2:8080"
-                            val imageURL = "$BASE_URL/routes/${route.summary.id}/image"
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                AsyncImage(model = imageURL,
-                                    contentDescription = null,
-                                    contentScale = ContentScale.FillWidth,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                            Text(route.description)
-                            workoutsViewModel.getFastestByRouteId(route.summary.id)
-                            RouteHighscoresList(
-                                workoutsViewModel.workouts.collectAsState().value,
-                                modifier = Modifier.weight(1f).fillMaxWidth()
+                        val BASE_URL = "http://192.168.1.2:8080"
+                        val imageURL = "$BASE_URL/routes/${route.summary.id}/image"
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            AsyncImage(model = imageURL,
+                                contentDescription = null,
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
+                        Text(route.description)
+                        workoutsViewModel.getFastestByRouteId(route.summary.id)
+                        RouteHighscoresList(
+                            workoutsViewModel.workouts.collectAsState().value,
+                            modifier = Modifier.weight(1f).fillMaxWidth()
+                        )
                     }
                     LargeFloatingActionButton(onClick = {
                         sheetOpen.value = !sheetOpen.value
