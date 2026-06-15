@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -46,7 +44,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.ui.RouteSearchViewModel
 import com.example.routesapp.ui.RoutesViewModel
 import com.example.routesapp.ui.components.RouteSummaryGridTile
-import com.example.routesapp.ui.components.RouteSummaryHeader
 import com.example.shared.ActivityType
 import com.example.shared.RouteSummary
 import com.example.shared.RouteType
@@ -70,7 +67,7 @@ fun RouteListScreen(
             inputField = { TextField(
                 value = searchViewModel.searchString.collectAsState().value ?: "",
                 onValueChange = { new: String -> searchViewModel.setSearchString(new) },
-                placeholder = { Text("Search names & descriptions...") },
+                placeholder = { Text("Nazwa lub opis...") },
                 leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = null) },
                 trailingIcon = {
                     IconButton(

@@ -4,47 +4,40 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.material.icons.automirrored.outlined.DirectionsRun
 import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.PedalBike
 import androidx.compose.material.icons.filled.Route
-import androidx.compose.material.icons.outlined.DirectionsRun
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Login
-import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.PedalBike
 import androidx.compose.material.icons.outlined.QuestionMark
 import androidx.compose.material.icons.outlined.Route
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -59,18 +52,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,13 +106,35 @@ class TabbedActivity : ComponentActivity() {
         })
         val scope = rememberCoroutineScope()
         val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
+        val route = routesViewModel.route.collectAsState().value
+
+        BackHandler(enabled = (pagerState.currentPage == 1 && route != null) ) {
+            routesViewModel.forgetRoute()
+        }
+
         ModalNavigationDrawer(drawerState = drawerState,
             drawerContent = { NavDrawerContent(drawerState, pagerState) }
         ) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = { TopAppBar(
-                    title = { Text("Tab Title", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth()) },
+                    title = {
+                        Text(
+                            text = (when (pagerState.currentPage) {
+                                0 -> "Routes App"
+                                1 -> if (route != null) {
+                                    "Szczegóły"
+                                } else {
+                                    "Trasy"
+                                }
+                                2 -> "Historia"
+                                else -> ""
+                            }),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
                     navigationIcon = { IconButton(
                         onClick = { scope.launch {
                             if (drawerState.isOpen) { drawerState.close() }
@@ -141,13 +151,20 @@ class TabbedActivity : ComponentActivity() {
                             contentDescription = null
                         )
                     }},
-                    actions = { IconButton(onClick = {}) { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null ) } }
+                    actions = {
+                        IconButton(
+                            enabled = pagerState.currentPage == 1 && route != null,
+                            onClick = {routesViewModel.forgetRoute()}
+                        ) {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null )
+                        }
+                    }
                 ) },
                 bottomBar = { NavigationBar {
                     listOf(
-                        Pair("Main", Icons.Default.Home),
-                        Pair("Routes", Icons.Default.Route),
-                        Pair("Workouts", Icons.Default.History)
+                        Pair("Główna", Icons.Default.Home),
+                        Pair("Trasy", Icons.Default.Route),
+                        Pair("Historia", Icons.Default.History)
                     ).forEachIndexed { index, (title, icon) ->
                         NavigationBarItem(
                             selected = pagerState.currentPage == index,
@@ -175,7 +192,13 @@ class TabbedActivity : ComponentActivity() {
                     ) { page ->
                         when (page) {
                             0 -> MainScreen()
-                            1 -> RouteListAdaptive(false, modifier = Modifier.fillMaxSize())
+                            1 -> {
+                                if (route == null) {
+                                    RouteList(false, modifier = Modifier.fillMaxSize())
+                                } else {
+                                    RouteDetailsScreen(modifier = Modifier.fillMaxSize())
+                                }
+                            }
                             2 -> WorkoutRecords()
                         }
                     }
@@ -197,7 +220,7 @@ class TabbedActivity : ComponentActivity() {
             scope.launch { drawerState.close() }
             scope.launch { pagerState.animateScrollToPage(1) }
         }
-        ModalDrawerSheet(modifier = Modifier.width(200.dp)) {
+        ModalDrawerSheet(modifier = Modifier.width(240.dp).fillMaxHeight().verticalScroll(rememberScrollState())) {
             val user = (authViewModel.sessionState.collectAsState().value as? SessionState.LoggedIn)?.user
             NavDrawerHeading(if (user != null) { "Elo elo, $user!" } else { "Wylogowano" })
 
@@ -260,7 +283,7 @@ class TabbedActivity : ComponentActivity() {
 
     @Composable
     fun MainScreen() {
-        Text("Main screen")
+        Text("Tymczasowy ekran główny", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
     }
 
     @Composable
@@ -283,24 +306,18 @@ class TabbedActivity : ComponentActivity() {
         if (dpWidth >= combinedListWidthDp*2) {
             RouteListAndDetails(alternatingRowColours, modifier = modifier)
         } else {
-            RouteListOnly(alternatingRowColours, modifier = modifier)
+            RouteList(alternatingRowColours, modifier = modifier)
         }
     }
 
     @Composable
-    fun RouteListOnly(alternatingRowColours: Boolean, modifier: Modifier = Modifier) {
-        val context = LocalContext.current
+    fun RouteList(alternatingRowColours: Boolean, modifier: Modifier = Modifier) {
+        val routesViewModel: RoutesViewModel = viewModel(factory = RoutesViewModel.Factory)
         RouteListScreen(
             modifier = modifier,
             alternatingRowColours = alternatingRowColours,
             onClick = { route ->
-                val intent = Intent(
-                    context,
-                    RouteDetailsActivity::class.java
-                ).apply {
-                    putExtra("route_id", route.id)
-                }
-                context.startActivity(intent)
+                routesViewModel.getRouteById(route.id)
             }
         )
     }

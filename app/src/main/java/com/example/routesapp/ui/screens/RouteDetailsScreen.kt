@@ -2,17 +2,12 @@ package com.example.routesapp.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -67,7 +62,7 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
                     Column(modifier = modifier.padding(16.dp)) {
                         RouteSummaryHeader(route.summary)
                         Column (
-                            modifier = Modifier.verticalScroll(rememberScrollState())
+                            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
                         ) {
                             val BASE_URL = "http://192.168.1.2:8080"
                             val imageURL = "$BASE_URL/routes/${route.summary.id}/image"
@@ -79,6 +74,7 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
                                 )
                             }
                             Text(route.description)
+                            workoutsViewModel.getFastestByRouteId(route.summary.id)
                             RouteHighscoresList(
                                 workoutsViewModel.workouts.collectAsState().value,
                                 modifier = Modifier.weight(1f).fillMaxWidth()
