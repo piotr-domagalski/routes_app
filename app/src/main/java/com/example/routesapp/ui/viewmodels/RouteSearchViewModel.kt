@@ -1,4 +1,4 @@
-package com.example.routesapp.ui
+package com.example.routesapp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

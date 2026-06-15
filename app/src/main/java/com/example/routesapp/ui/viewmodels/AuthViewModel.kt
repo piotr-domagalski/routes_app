@@ -1,4 +1,4 @@
-package com.example.routesapp.ui
+package com.example.routesapp.ui.viewmodels
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel

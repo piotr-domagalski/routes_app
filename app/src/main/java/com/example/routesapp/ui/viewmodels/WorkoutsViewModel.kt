@@ -1,4 +1,4 @@
-package com.example.routesapp.ui
+package com.example.routesapp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.routesapp.RoutesApp
-import com.example.routesapp.data.RoutesRepository
 import com.example.routesapp.data.WorkoutsRepository
-import com.example.shared.RouteDetails
-import com.example.shared.RouteSummary
 import com.example.shared.WorkoutSummary
 import com.example.shared.WorkoutsQuery
 import com.example.shared.WorkoutsQuerySortOrder

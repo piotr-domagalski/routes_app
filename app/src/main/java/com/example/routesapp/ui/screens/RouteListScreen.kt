@@ -41,8 +41,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.routesapp.ui.RouteSearchViewModel
-import com.example.routesapp.ui.RoutesViewModel
+import com.example.routesapp.ui.viewmodels.RouteSearchViewModel
+import com.example.routesapp.ui.viewmodels.RoutesViewModel
 import com.example.routesapp.ui.components.RouteSummaryGridTile
 import com.example.shared.ActivityType
 import com.example.shared.RouteSummary

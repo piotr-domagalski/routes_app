@@ -70,6 +70,9 @@ import com.example.routesapp.ui.screens.RouteListScreen
 import com.example.routesapp.ui.theme.RoutesAppTheme
 import com.example.routesapp.data.SessionState
 import com.example.routesapp.ui.components.RouteHighscoresList
+import com.example.routesapp.ui.viewmodels.AuthViewModel
+import com.example.routesapp.ui.viewmodels.RoutesViewModel
+import com.example.routesapp.ui.viewmodels.WorkoutsViewModel
 import com.example.shared.ActivityType
 import com.example.shared.RouteType
 import com.example.shared.RoutesQuery

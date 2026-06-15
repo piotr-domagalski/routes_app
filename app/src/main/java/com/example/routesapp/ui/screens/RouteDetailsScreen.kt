@@ -33,9 +33,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.routesapp.data.fake.FakeRoutesRepository
 import com.example.routesapp.data.fake.SampleRoutes
-import com.example.routesapp.ui.RoutesViewModel
-import com.example.routesapp.ui.StopwatchViewModel
-import com.example.routesapp.ui.WorkoutsViewModel
+import com.example.routesapp.ui.viewmodels.RoutesViewModel
+import com.example.routesapp.ui.viewmodels.StopwatchViewModel
+import com.example.routesapp.ui.viewmodels.WorkoutsViewModel
 import com.example.routesapp.ui.components.RouteHighscoresList
 import com.example.routesapp.ui.components.RouteSummaryHeader
 import com.example.routesapp.ui.theme.RoutesAppTheme
