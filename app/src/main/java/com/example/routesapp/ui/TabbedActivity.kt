@@ -2,7 +2,6 @@ package com.example.routesapp.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
@@ -12,11 +11,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -50,6 +53,8 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -63,11 +68,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routesapp.RoutesApp
@@ -173,8 +175,21 @@ class TabbedActivity : ComponentActivity() {
         scrollBehavior: TopAppBarScrollBehavior,
         scope: CoroutineScope
     ) {
-        Text("Medium")
-        CompactLayout(pagerState, drawerState, scrollBehavior, scope)
+        Row(modifier = Modifier.fillMaxSize()) {
+            Scaffold(
+                modifier = Modifier.weight(1f).nestedScroll(scrollBehavior.nestedScrollConnection),
+                topBar = { TopBar(pagerState, drawerState, scope, scrollBehavior) },
+            ) { innerPadding ->
+                ContentTabs(
+                    pagerState,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
+            }
+            NavRailMedium(pagerState, scope, modifier = Modifier.align(Alignment.CenterVertically))
+        }
     }
 
     @Composable
@@ -184,8 +199,21 @@ class TabbedActivity : ComponentActivity() {
         scrollBehavior: TopAppBarScrollBehavior,
         scope: CoroutineScope
     )  {
-        Text("Expanded")
-        CompactLayout(pagerState, drawerState, scrollBehavior, scope)
+        Row(modifier = Modifier.fillMaxSize()) {
+            Scaffold(
+                modifier = Modifier.weight(1f),
+                topBar = { TopBar(pagerState, drawerState, scope, scrollBehavior) },
+            ) { innerPadding ->
+                ContentTabs(
+                    pagerState,
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
+            }
+            NavRailExpanded(pagerState, scope, modifier = Modifier.align(Alignment.CenterVertically))
+        }
     }
 
     @Composable
@@ -237,14 +265,15 @@ class TabbedActivity : ComponentActivity() {
         )
     }
 
+    val navItems = listOf(
+        Pair("Główna", Icons.Default.Home),
+        Pair("Trasy", Icons.Default.Route),
+        Pair("Historia", Icons.Default.History)
+    )
     @Composable
     fun NavBar(pagerState: PagerState, scope: CoroutineScope) {
         NavigationBar {
-            listOf(
-                Pair("Główna", Icons.Default.Home),
-                Pair("Trasy", Icons.Default.Route),
-                Pair("Historia", Icons.Default.History)
-            ).forEachIndexed { index, (title, icon) ->
+            navItems.forEachIndexed { index, (title, icon) ->
                 NavigationBarItem(
                     selected = pagerState.currentPage == index,
                     onClick = {
@@ -258,6 +287,57 @@ class TabbedActivity : ComponentActivity() {
             }
         }
     }
+
+    @Composable
+    fun NavRailMedium(pagerState: PagerState, scope: CoroutineScope, modifier: Modifier = Modifier) {
+        NavigationRail(
+            modifier = modifier,
+            windowInsets = WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Vertical
+            )
+        ) {
+            Column(modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                navItems.forEachIndexed { index, (title, icon) ->
+                    NavigationRailItem(
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        icon = { Icon(imageVector = icon, contentDescription = null) },
+                        label = { Text(title) }
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun NavRailExpanded(pagerState: PagerState, scope: CoroutineScope, modifier: Modifier = Modifier) {
+        NavigationRail(
+            modifier = modifier,
+            windowInsets = WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Vertical
+            )
+        ) {
+            navItems.forEachIndexed { index, (title, icon) ->
+                NavigationRailItem(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    icon = { Icon(imageVector = icon, contentDescription = null) },
+                    label = { Text(title) }
+                )
+            }
+        }
+    }
+
 
     @Composable
     fun ContentTabs(pagerState: PagerState, modifier: Modifier = Modifier) {
