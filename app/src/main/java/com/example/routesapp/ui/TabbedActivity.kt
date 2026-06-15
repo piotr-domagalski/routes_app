@@ -453,7 +453,7 @@ class TabbedActivity : ComponentActivity() {
         val user = (authViewModel.sessionState.collectAsState().value as? SessionState.LoggedIn)?.user
         if (user != null) {
             workoutsViewModel.getRecentByUser(user)
-            RouteHighscoresList(workoutsViewModel.workouts.collectAsState().value)
+            RouteHighscoresList(workoutsViewModel.userWorkouts.collectAsState().value, true)
         } else {
             Text("Log in to view workout records")
         }

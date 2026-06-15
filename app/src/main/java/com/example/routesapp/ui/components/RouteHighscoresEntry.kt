@@ -11,12 +11,15 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun RouteHighscoresEntry(summary: WorkoutSummary, modifier: Modifier = Modifier) {
+fun RouteHighscoresEntry(summary: WorkoutSummary, showRouteId: Boolean, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
     ) {
         Text(summary.timestamp.toString())
+        if (showRouteId) {
+            Text("${summary.route}")
+        }
         Text(summary.user)
         Text(summary.duration.toString())
     }

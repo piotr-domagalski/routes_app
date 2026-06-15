@@ -79,7 +79,8 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
                         Text(route.description)
                         workoutsViewModel.getFastestByRouteId(route.summary.id)
                         RouteHighscoresList(
-                            workoutsViewModel.workouts.collectAsState().value,
+                            workoutsViewModel.routeWorkouts.collectAsState().value,
+                            false,
                             modifier = Modifier.height(200.dp).fillMaxWidth()
                         )
                     }

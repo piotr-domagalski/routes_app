@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.routesapp.RoutesApp
+import com.example.routesapp.data.RoutesRepository
 import com.example.routesapp.data.WorkoutsRepository
 import com.example.shared.WorkoutSummary
 import com.example.shared.WorkoutsQuery
@@ -16,15 +17,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class WorkoutsViewModel(
-    private val repository: WorkoutsRepository
+    private val workoutsRepository: WorkoutsRepository,
 ) : ViewModel() {
-    private val _workoutSummaries = MutableStateFlow(emptyList<WorkoutSummary>())
+    private val _userWorkoutSummaries = MutableStateFlow(emptyList<WorkoutSummary>())
+    private val _routeWorkoutSummaries = MutableStateFlow(emptyList<WorkoutSummary>())
 
-    val workouts = _workoutSummaries.asStateFlow()
+    val userWorkouts = _userWorkoutSummaries.asStateFlow()
+    val routeWorkouts = _routeWorkoutSummaries.asStateFlow()
 
     fun getFastestByRouteId(routeId: Int) {
         viewModelScope.launch {
-            _workoutSummaries.value = repository.getWorkouts(
+            _routeWorkoutSummaries.value = workoutsRepository.getWorkouts(
                 WorkoutsQuery(
                     route = routeId,
                     sort = WorkoutsQuerySortOrder.FASTEST
@@ -35,7 +38,7 @@ class WorkoutsViewModel(
 
     fun getRecentByUser(user: String) {
         viewModelScope.launch {
-            _workoutSummaries.value = repository.getWorkouts(
+            _userWorkoutSummaries.value = workoutsRepository.getWorkouts(
                 WorkoutsQuery(
                     username = user,
                     sort = WorkoutsQuerySortOrder.RECENT
@@ -48,10 +51,9 @@ class WorkoutsViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 WorkoutsViewModel(
-                    (this[APPLICATION_KEY] as RoutesApp).appContainer.workoutsRepository
+                    (this[APPLICATION_KEY] as RoutesApp).appContainer.workoutsRepository,
                 )
             }
         }
     }
-
 }
