@@ -15,50 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RoutesApp">
         <activity
-            android:name=".ui.RouteListActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.RoutesApp">
-        </activity>
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.RoutesApp">
-        </activity>
-        <activity
-            android:name=".ui.RouteDetailsActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.RoutesApp">
-        </activity>
-        <activity
-            android:name=".ui.RouteCombinedActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.RoutesApp">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.StopwatchActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.RoutesApp">
-        </activity>
-        <activity
             android:name=".ui.LoginActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.RoutesApp">
         </activity>
         <activity
             android:name=".ui.TabbedActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.RoutesApp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
 
