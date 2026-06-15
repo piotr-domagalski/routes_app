@@ -14,7 +14,8 @@ object SampleRoutes {
                 15670,
                 RouteType.LOOP,
                 ActivityType.BOTH),
-            description = "pełna pętla"
+            description = "pełna pętla",
+            thumbnailURI = null
         ),
         RouteDetails(
             summary = RouteSummary(
@@ -24,7 +25,8 @@ object SampleRoutes {
                 RouteType.ONEWAY,
                 ActivityType.BOTH
             ),
-            description = "odcinek przejeżdżalny asfaltem"
+            description = "odcinek przejeżdżalny asfaltem",
+            thumbnailURI = null
         ),
         RouteDetails(
             summary = RouteSummary(
@@ -34,7 +36,8 @@ object SampleRoutes {
                 RouteType.LOOP,
                 ActivityType.BOTH
             ),
-            description = "opis cytadeli"
+            description = "opis cytadeli",
+            thumbnailURI = null
         ),
         RouteDetails(
             summary = RouteSummary(
@@ -44,7 +47,8 @@ object SampleRoutes {
                 RouteType.LOOP,
                 ActivityType.BOTH
             ),
-            description = "pętla wokół jeziora kierskiego"
+            description = "pętla wokół jeziora kierskiego",
+            thumbnailURI = null
         ),
         RouteDetails(
             summary = RouteSummary(
@@ -54,7 +58,8 @@ object SampleRoutes {
                 RouteType.ONEWAY,
                 ActivityType.RUN
             ),
-            description = "to jest test wyświetlania długości w metrach"
+            description = "to jest test wyświetlania długości w metrach",
+            thumbnailURI = null
         ),
         RouteDetails(
             summary = RouteSummary(
@@ -64,7 +69,8 @@ object SampleRoutes {
                 RouteType.LOOP,
                 ActivityType.BOTH
             ),
-            description = "ktor wita"
+            description = "ktor wita",
+            thumbnailURI = null
         ),
         RouteDetails(
             summary = RouteSummary(
@@ -74,7 +80,8 @@ object SampleRoutes {
                 RouteType.ONEWAY,
                 ActivityType.BIKE
             ),
-            description = "reverse blitzkrieg"
+            description = "reverse blitzkrieg",
+            thumbnailURI = null
         )
     )
     val routeDetails = routes[0]

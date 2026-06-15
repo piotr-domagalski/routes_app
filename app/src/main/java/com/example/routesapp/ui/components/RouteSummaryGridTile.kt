@@ -26,10 +26,12 @@ import com.example.shared.RouteSummary
 fun RouteSummaryGridTile(route: RouteSummary, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth().padding(8.dp)) {
         Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
-            AsyncImage(model = "https://picsum.photos/seed/${route.id}/300",
+            val BASE_URL = "http://192.168.1.2:8080"
+            val thumbURL = "$BASE_URL/routes/${route.id}/thumbnail"
+            AsyncImage(model = thumbURL,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
         Text(

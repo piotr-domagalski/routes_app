@@ -67,6 +67,8 @@ class RoutesRepository {
                             activityType = it[RoutesTable.activityType],
                             ),
                         description = it[RoutesTable.description],
+                        thumbnailURI = null,
+                        imageURI = null,
                     )
                 }
         }
@@ -90,7 +92,33 @@ class RoutesRepository {
                 it[RoutesTable.activityType] = route.summary.activityType
                 it[RoutesTable.routeType] = route.summary.routeType
                 it[RoutesTable.description] = route.description
+                it[RoutesTable.thumbnailURI] = route.thumbnailURI
+                it[RoutesTable.imageURI] = route.imageURI
             }
         }
+    }
+
+    fun getThumbnailURI(routeId: Int): String? {
+        val uris: List<String?> = transaction {
+            RoutesTable.select(RoutesTable.thumbnailURI)
+                .where {RoutesTable.id eq routeId}
+                .map { it[RoutesTable.thumbnailURI] }
+        }
+
+        check(uris.size <= 1) { "multiple routes with identical id (=$routeId) should not exist" }
+
+        return uris.firstOrNull()
+    }
+
+    fun getImageURI(routeId: Int): String? {
+        val uris: List<String?> = transaction {
+            RoutesTable.select(RoutesTable.imageURI)
+                .where {RoutesTable.id eq routeId}
+                .map { it[RoutesTable.imageURI] }
+        }
+
+        check(uris.size <= 1) { "multiple routes with identical id (=$routeId) should not exist" }
+
+        return uris.firstOrNull()
     }
 }

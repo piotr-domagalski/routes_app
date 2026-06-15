@@ -22,4 +22,6 @@ COPY --from=build /workspace/backend/build/install/backend app
 
 EXPOSE 8080
 
+COPY backend/data /data
+
 ENTRYPOINT ["app/bin/backend"]

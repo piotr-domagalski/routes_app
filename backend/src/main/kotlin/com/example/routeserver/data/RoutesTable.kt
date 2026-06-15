@@ -12,6 +12,9 @@ object RoutesTable : Table("routes") {
     val routeType = enumerationByName("type", 10, RouteType::class)
     val activityType = enumerationByName("activity", 10, ActivityType::class)
 
+    val thumbnailURI = varchar("thumbnailURI", 255).nullable()
+    val imageURI = varchar("imageURI", 255).nullable()
+
     override val primaryKey = PrimaryKey(id)
 
     val summaryColumns = listOf(id, name, distanceMeters, routeType, activityType)

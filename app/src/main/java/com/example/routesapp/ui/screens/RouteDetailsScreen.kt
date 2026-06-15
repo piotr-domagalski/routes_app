@@ -2,12 +2,19 @@ package com.example.routesapp.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Timer
@@ -23,10 +30,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.routesapp.data.fake.FakeRoutesRepository
 import com.example.routesapp.data.fake.SampleRoutes
 import com.example.routesapp.ui.RoutesViewModel
@@ -57,11 +66,24 @@ fun RouteDetailsScreen(modifier: Modifier = Modifier,
                     workoutsViewModel.getFastestByRouteId(route.summary.id)
                     Column(modifier = modifier.padding(16.dp)) {
                         RouteSummaryHeader(route.summary)
-                        Text(route.description)
-                        RouteHighscoresList(
-                            workoutsViewModel.workouts.collectAsState().value,
-                            modifier = Modifier.weight(1f).fillMaxWidth()
-                        )
+                        Column (
+                            modifier = Modifier.verticalScroll(rememberScrollState())
+                        ) {
+                            val BASE_URL = "http://192.168.1.2:8080"
+                            val imageURL = "$BASE_URL/routes/${route.summary.id}/image"
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                AsyncImage(model = imageURL,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.FillWidth,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                            Text(route.description)
+                            RouteHighscoresList(
+                                workoutsViewModel.workouts.collectAsState().value,
+                                modifier = Modifier.weight(1f).fillMaxWidth()
+                            )
+                        }
                     }
                     LargeFloatingActionButton(onClick = {
                         sheetOpen.value = !sheetOpen.value

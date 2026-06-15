@@ -1,10 +1,12 @@
 CREATE TABLE routes (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(127) NULL,
-    description VARCHAR(511) NULL,
-    distanceMeters INT NULL,
-    type ENUM("LOOP", "ONEWAY") NULL,
-    activity ENUM("RUN", "BIKE", "BOTH") NULL
+    name VARCHAR(127) NOT NULL,
+    description VARCHAR(511) NOT NULL,
+    distanceMeters INT NOT NULL,
+    type ENUM("LOOP", "ONEWAY") NOT NULL,
+    activity ENUM("RUN", "BIKE", "BOTH") NOT NULL,
+    thumbnailURI VARCHAR(255) NULL,
+    imageURI VARCHAR(255) NULL
 );
 
 CREATE TABLE users (

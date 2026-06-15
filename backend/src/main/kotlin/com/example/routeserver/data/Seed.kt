@@ -104,7 +104,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.BOTH,
         ),
-        description = "pełna pętla"
+        description = "pełna pętla",
+        thumbnailURI = "https://picsum.photos/seed/101/300",
+        imageURI = "https://picsum.photos/seed/101/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -114,7 +116,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.ONEWAY,
             activityType = ActivityType.BOTH,
         ),
-        description = "odcinek przejeżdżalny asfaltem"
+        description = "odcinek przejeżdżalny asfaltem",
+        thumbnailURI = "https://picsum.photos/seed/102/300",
+        imageURI = "https://picsum.photos/seed/102/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -124,7 +128,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.BOTH,
         ),
-        description = "opis cytadeli"
+        description = "opis cytadeli",
+        thumbnailURI = "https://picsum.photos/seed/103/300",
+        imageURI = "https://picsum.photos/seed/103/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -134,7 +140,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.BOTH,
         ),
-        description = "pętla wokół jeziora kierskiego"
+        description = "pętla wokół jeziora kierskiego",
+        thumbnailURI = "https://picsum.photos/seed/104/300",
+        imageURI = "https://picsum.photos/seed/104/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -144,7 +152,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.ONEWAY,
             activityType = ActivityType.RUN,
         ),
-        description = "to jest test wyświetlania długości w metrach"
+        description = "to jest test wyświetlania długości w metrach",
+        thumbnailURI = "https://picsum.photos/seed/105/300",
+        imageURI = "https://picsum.photos/seed/105/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -154,7 +164,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.BOTH,
         ),
-        description = "ktor wita"
+        description = "ktor wita",
+        thumbnailURI = "https://picsum.photos/seed/106/300",
+        imageURI = "https://picsum.photos/seed/106/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -164,7 +176,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.ONEWAY,
             activityType = ActivityType.BIKE,
         ),
-        description = "chce ci się? fr?"
+        description = "chce ci się? fr?",
+        thumbnailURI = "https://picsum.photos/seed/107/300",
+        imageURI = "https://picsum.photos/seed/107/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -174,7 +188,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.BIKE,
         ),
-        description = "idk dodaję żeby lista musiała się scrollować"
+        description = "idk dodaję żeby lista musiała się scrollować",
+        thumbnailURI = "https://picsum.photos/seed/108/300",
+        imageURI = "https://picsum.photos/seed/108/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -186,9 +202,11 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
         ),
         description = """
             |To jest trasa z bardzo długim opisem.
-            |Jest długi ponieważ trasa ta jest bardzo ciekawa i wymaga długiego opisu by w pełni oddać jej ciekawość. 
+            |Jest długi ponieważ trasa ta jest bardzo ciekawa i wymaga długiego opisu by w pełni oddać jej ciekawość.
             |Gdyby opis był krótki to nie opisywałby odpowiednio szczegółowo tej trasy, dlatego jest długi.
-            """.trimMargin()
+            """.trimMargin(),
+        thumbnailURI = "https://picsum.photos/seed/109/300",
+        imageURI = "https://picsum.photos/seed/109/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -198,7 +216,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.BIKE,
         ),
-        description = "kończą mi się śmieszne liczby :'("
+        description = "kończą mi się śmieszne liczby :'(",
+        thumbnailURI = "https://picsum.photos/seed/110/300",
+        imageURI = "https://picsum.photos/seed/110/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -208,7 +228,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.BIKE,
         ),
-        description = "dwucyfrowy dystans"
+        description = "dwucyfrowy dystans",
+        thumbnailURI = "https://picsum.photos/seed/111/300",
+        imageURI = "https://picsum.photos/seed/111/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -218,7 +240,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.ONEWAY,
             activityType = ActivityType.RUN,
         ),
-        description = "po dwunastopak żubra"
+        description = "po dwunastopak żubra",
+        thumbnailURI = "file:///data/images/biedra.jpg",
+        imageURI = "file:///data/images/biedra_inside.jpg"
     ),
     RouteDetails(
         RouteSummary(
@@ -228,7 +252,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.LOOP,
             activityType = ActivityType.RUN,
         ),
-        description = "po prawdziwe piwo, i powrót bo nie jestem alkoholikiem i mogę dojść do domu o własnych siłach"
+        description = "po prawdziwe piwo, i powrót bo nie jestem alkoholikiem i mogę dojść do domu o własnych siłach",
+        thumbnailURI = "https://picsum.photos/seed/113/300",
+        imageURI = "https://picsum.photos/seed/113/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -238,7 +264,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.ONEWAY,
             activityType = ActivityType.RUN,
         ),
-        description = "otworzyć kolejnego żubra"
+        description = "otworzyć kolejnego żubra",
+        thumbnailURI = "https://picsum.photos/seed/114/300",
+        imageURI = "https://picsum.photos/seed/114/1920/1080"
     ),
     RouteDetails(
         RouteSummary(
@@ -248,7 +276,9 @@ val SEED_ROUTES: List<RouteDetails> = listOf(
             routeType = RouteType.ONEWAY,
             activityType = ActivityType.RUN,
         ),
-        description = "endurance run world record"
+        description = "endurance run world record",
+        thumbnailURI = "file:///data/images/FullMoon2010.jpg",
+        imageURI = "file:///data/images/moonrun.jpg"
     )
 )
 
